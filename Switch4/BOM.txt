@@ -8,3 +8,6 @@ KSC641JLFS; Tactswitch SMD 3Newton; SMK Components; Farnell; ; 2320056RL; Digike
 STM32F030C6T6; uC Cortex-M0, 48 MHz, 32 KB flash, 4 KB RAM, LQFP48; ST Micro
 243-131; KNX pins; Wago
 243-211; KNX connector Red/Black; Wago
+SHT20; Digital Humidity Sensor; Sensirion; 
+VCNL4010; Fully Integrated Proximity and Ambient Light Sensor with Infrared; Vishay
+EKMC1601111; PIR; Panasonic
