@@ -1,2 +1,10 @@
-NCN5121
-STM32F030C6T6
+PN; Description; Brand; Supplier1; Supplier1 Price; Supplier1 PN; Supplier2; Supplier2 Price; Supplier2 PN
+NCN5121; KNX Transceiver; ON Semi
+CLV1A-FKB; RGB PLC4 LED; Cree
+TL3301CF260QJ; Tactswitch SMD; E-Switch
+KSC621JLFS; Tactswitch SMD 1.6Newton;SMK Components; Farnell; 0,46; 2320054RL; Digikey; 0,387; 401-1748-2-ND
+KSC641JLFS; Tactswitch SMD 3Newton; SMK Components; Farnell; ; 2320056RL; Digikey; 0,387; 404-1788-1-ND
+11AA010T-I/TT; EEPROM 1Kx8; Microchip; Farnell; 0.148; 157828RL; Digikey; 0,143; 
+STM32F030C6T6; uC Cortex-M0, 48 MHz, 32 KB flash, 4 KB RAM, LQFP48; ST Micro
+243-131; KNX pins; Wago
+243-211; KNX connector Red/Black; Wago
