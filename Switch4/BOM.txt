@@ -11,3 +11,4 @@ STM32F030C6T6; uC Cortex-M0, 48 MHz, 32 KB flash, 4 KB RAM, LQFP48; ST Micro
 SHT20; Digital Humidity Sensor; Sensirion; 
 VCNL4010; Fully Integrated Proximity and Ambient Light Sensor with Infrared; Vishay
 EKMC1601111; PIR; Panasonic
+Elec. Mic.
