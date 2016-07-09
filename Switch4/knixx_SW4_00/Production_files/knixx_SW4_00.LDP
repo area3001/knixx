@@ -1,0 +1,3 @@
+Layer Pairs Export File for PCB: C:\Users\WimVG\Dropbox\Electronics\knixx_SW4_00\knixx_SW4_00.PcbDoc
+LayersSetName=Top_Bot_Thru_Holes|DrillFile=knixx_sw4_00-roundholes.txt|DrillLayers=gtl,g2,g3,gbl
+LayersSetName=Top_Bot_Slot_Holes|DrillFile=knixx_sw4_00-slotholes.txt|DrillLayers=gtl,g2,g3,gbl

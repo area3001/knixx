@@ -1,0 +1,41 @@
+﻿Field=Comment~String~Comment~147|Field=Description~String~Description~80|Field=Designator~String~Designator~80|Field=Footprint~String~Footprint~80|Field=LibRef~String~LibRef~148|Field=Quantity~Integer~Quantity~45|Field=Supplier 1~String~Supplier 1~56|Field=Supplier Part Number 1~String~Supplier Part Number 1~99|Field=Value~String~Value~20|ReportField=Currency~<none>|ReportField=ProductionQuantity~1|ReportField=ProjectFileName~knixx_SW4_00.PrjPcb|ReportField=ProjectFullPath~C:\Users\WimVG\Dropbox\Electronics\knixx_SW4_00\knixx_SW4_00.PrjPcb|ReportField=Title~Bill of Materials For Variant [SW4] of Project [knixx_SW4_00.PrjPcb] (PCB Document : knixx_SW4_00.PcbDoc)|ReportField=TotalQuantity~82|ReportField=ReportTime~11:22:56|ReportField=ReportDate~4/07/2016|ReportField=ReportDateTime~4/07/2016 11:22:56|ReportField=OutputName~Bill of Materials|ReportField=OutputType~BOM_PartType|ReportField=GeneratorName~BOM|ReportField=GeneratorDescription~Bill of Materials|ReportField=VariantName~SW4|ReportField=PCB_ENGINEER~WimVG|ReportField=PCB_REV~00|ReportField=PCB_TITLE~KNIXX_SW4|ReportField=Address1~|ReportField=Address2~|ReportField=Address3~|ReportField=Address4~|ReportField=Application_BuildNumber~|ReportField=ApprovedBy~|ReportField=Author~|ReportField=CheckedBy~|ReportField=CompanyName~|ReportField=CurrentDate~4/07/2016|ReportField=CurrentTime~9:18:56|ReportField=Date~19/04/2016|ReportField=DocumentFullPathAndName~C:\Users\WimVG\Dropbox\Electronics\knixx_SW4_00\knixx_SW4_00.SchDoc|ReportField=DocumentName~knixx_SW4_00.SchDoc|ReportField=DocumentNumber~|ReportField=DrawnBy~Wim Van Gool|ReportField=Engineer~|ReportField=ImagePath~|ReportField=ModifiedDate~30/06/2016|ReportField=Organization~|ReportField=PageSetup~Record=PageOptions:CenterHorizontal=True:CenterVertical=True:PrintScale=0.70:XCorrection=1.00:YCorrection=1.00:PrintKind=1:BorderSize=5000000:LeftOffset=0:BottomOffset=0:Orientation=2:PaperLength=1000:PaperWidth=1000:Scale=100:PaperSource=15:PrintQuality=600:MediaType=1:DitherType=10:PrintScaleMode=1:PaperKind=A4 (210 x 297 mm):PaperIndex=9|ReportField=ProjectName~knixx_SW4_00.PrjPcb|ReportField=Revision~00|ReportField=Rule~|ReportField=SheetNumber~1|ReportField=SheetTotal~1|ReportField=Time~|ReportField=Title~KNIXX_SW4|ReportField=DataSourceFileName~knixx_SW4_00.PrjPcb|ReportField=DataSourceFullPath~C:\Users\WimVG\Dropbox\Electronics\knixx_SW4_00\knixx_SW4_00.PrjPcb|ReportField=PCBDataSourceFileName~knixx_SW4_00.PcbDoc|ReportField=PCBDataSourceFullPath~C:\Users\WimVG\Dropbox\Electronics\knixx_SW4_00\knixx_SW4_00.PcbDoc
+|Capacitor Ceramic|C1, C6, C7, C13|C0402|CAP # 100nF 16V 0402|4|Farnell|1758896|100nF 16V
+|Capacitor Ceramic|C2, C8, C9, C10, C11, C12, C20, C21, C23, C25, C28|C0402|CAP # 10nF 16V 0402|11|Farnell|1758924|10nF 16V
+|Capacitor Ceramic|C3, C4, C26, C27, C34|C0603_N|CAP # 1uF 16V 0603|5|Farnell|2320814|1uF 16V
+|Capacitor Ceramic|C5, C19|C0805_N|CAP # 10uF 10V 0805|2|Farnell|2320859 |10uF 10V
+|Capacitor Ceramic|C14, C15|C0402|CAP # 12pF 50V 0402|2|Farnell|2310489|12pF
+|Capacitor Ceramic|C16|C0805_N|CAP # 220nF 50V 0805|1|Farnell|2496964|220nF 50V
+|Capacitor Ceramic|C17|C0603_N|CAP # 100nF 50V 0603|1|Farnell|1759122|100nF 50V
+|Capacitor Ceramic|C18|C0603_N|CAP # 47nF 50V 0603|1|Farnell|2496867|47nF 50V
+|Capacitor Ceramic|C29, C30, C31, C32, C33|C1206_N|CAP # 22uF 35V 1206 X5R|5|Digikey|445-8045-1-ND|22uF 35V
+CONNECTOR FOR EIB APPLICATIONS PUSH-WIRE® CONNECTION||CON1|WAGO_243-211|Wago 243-211 Connector EIB|1|||243-211
+PLCC2 general purpose RGB LED Cree CLV1A-FKB|=Description|D1, D2, D3, D4|Cree_CLV1A-FKB|LED # RGB PLCC2 CLV1A-FKB|4|||CLV1A-FKB
+Low Capacitanse TVS Diode array|=Description|D7|SOT-143|TVS # YSSR05|1|China||YSSR05
+NTS260SFT1G  Schottky Rectifier, Single, 60 V, 2 A, SOD-123, 650 mV|=Description|D8|ON_SOD-123FL|Schottky # NTS260SFT1G|1|Farnell|2473419|NTS260SFT1G
+BLM15AX102SN1D||F1, F2|L0402|FER # 1K 0A35 0402 0R49 BLM15AX102SN1D|2|Farnell|2443221|0A35 0R49
+Vertical Micro USB B 614105150721||J1|WE_614105150721|USB Micro B TH VERTICAL 614105150721|1|||614105150721
+SRU5028-100Y||L1|IND_6045|IND # 10uH 5.2x5.2mm SRU5028-100Y|1|Farnell|1362078|10uH
+Header 1.0mm Shrouded 5||P1|WE_665305124022|HDR # SHR 1.0mm 5way - 665305124022|1|||665305124022
+SOLDER PIN FOR PCBS UP TO 2 MM||P2, P3|WAGO_243-131|Wago 234-131 Solder pin|2|||243-131
+3 pin Solder SW Circular 1mm||P4|SOLDER_SW_C_1MM_3|SW # Solder 3 pin Circular 1mm|1|||
+||R1, R2|R0402|RES # 100K 0402|2|||100K
+||R8, R9, R10|R0402|RES # 47R 0402|3|||47R
+||R11|R0603_N|RES # 0R 0603|1|||0R
+||R12, R13|R0402|RES # 22R 0402|2|||22R
+||R14, R15, R19, R28|R0402|RES # 10K 0402|4|||10K
+||R16, R17|R0402|RES # 4K7 0402|2|||4K7
+||R20|R2512|RES # 27R 2512|1|||27R
+||R21|R0402|RES # 1R 0402|1|||1R
+||R22, R23, R25, R27|R0402|RES # 100R 0402|4|||100R
+Sealed Tact Switch for SMT 6,2x6,2x7,7||SW1, SW2, SW3, SW4|CK_KSC6xxJ|SW # TACT KSC621JLFS|4|Farnell||KSC621JLFS
+LP SMD tact sw||SW7|CK_KMR4|SW # KMR4|1|Farnell||KMR442GULCLFS
+0.8A Dual P-Ch MOSGET Vgs -1.2|=Description|T1|SOT-363|NTJD4152PT1G  Dual P-Ch MOSFET 0.8A 1.2Vgs 20Vds|1|Farnell|2533191|NTJD4152PT1G
+0.2A N-Ch MOSFET Vgs 3.2||T2|SOT23-3|BSS138 N-Ch MOSFET 0.2A 3.2Vgs 60Vds|1|Farnell|2432717|BSS138
+||TP1|TP_0.8mm|TP # 0.8mm|1|||NO BOM
+Entry-level ARM Cortex-M0 Value line MCU with up to 32 Kbytes Flash, 48 MHz CPU, USB|=Description|U1|STM_LQFP48_N|M0 # STM32F070C6T6|1|Farnell|2488283|STM32F070C6T6
+PIR 5m White|=Description|U2|PAN_EKMC1601111|PIR 5m WH EKMC1601111|1|Farnell|2095728|EKMC1601111
+Sensirion SHT20 temperature and humidity sensor I2C|=Description|U3|SNS_DFN6|TMP HUM # SHT20|1|Digikey|1649-1004-1-ND|SHT20
+3V3 100mA Ultra Low Noise LDO|=Description|U4|TI_DBV_R-PDSO-G5|LDO # 3V3 0A1 ULN TPS79133|1|Farnell|8461767 |TPS79133
+KNX Transceiver for Twisted Pair Networks|=Description|U7|ONS_QFN40_6x6|KNX # NCN5121|1|||NCN5121
+TSL2584TSV Light-to-Digital Device|=Description|U8|AMS_6TSV|LGHT # TSL2584TSV|1|Digikey|TSL2584TSVTR-ND|TSL2584TSV
+16MHZ ABMM2|Crystal Oscillator 4pin casing|Y1|ABMM2|XTAL # 16Mhz ABMM2|1|Farnell|2101343|16MHz

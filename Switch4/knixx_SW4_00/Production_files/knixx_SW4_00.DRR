@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+NCDrill File Report For: knixx_SW4_00.PcbDoc   4/07/2016  11:22:46
+---------------------------------------------------------------------------
+
+Layer Pair : Top Layer to Bottom Layer
+ASCII RoundHoles File : knixx_SW4_00-RoundHoles.TXT
+ASCII SlotHoles File : knixx_SW4_00-SlotHoles.TXT
+
+Tool         Hole Size           Hole Type     Hole Count Plated       Tool Travel
+---------------------------------------------------------------------------
+T1        11.81mil (0.29997mm)     Round          111              16.05 Inch (407.58 mm)
+T2        13.78mil (0.35001mm)     Slot           2                0.62 Inch (15.63 mm)
+T3        17.32mil (0.43993mm)     Round          5                0.20 Inch (5.09 mm)
+T4        29.53mil (0.75006mm)     Round          3                0.34 Inch (8.67 mm)
+T5        47.24mil (1.1999mm)      Round          2                0.23 Inch (5.75 mm)
+---------------------------------------------------------------------------
+Totals                                            123              17.43 Inch (442.72 mm)
+
+Total Processing Time (hh:mm:ss) : 00:00:00
