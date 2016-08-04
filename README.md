@@ -8,15 +8,15 @@ Our first development board is a 4 or 6 button KNX compatible switch which fits 
 
 #### Top 3D render of the 4 switch variant with sensors
 
-![knixx_SW4_00_top 4SW version](https://raw.githubusercontent.com/area3001/knixx/master/Switch4/knixx_SW4_00/3D_VIEW_TOP.png)
+![knixx_SW4_00_top 4SW version](https://raw.githubusercontent.com/area3001/knixx/master/HW/Switch4/knixx_SW4_00/3D_VIEW_TOP.png)
 
 #### Top 3D render of the 6 switch variant
 
-![knixx_SW4_00_top 6SW version](https://raw.githubusercontent.com/area3001/knixx/master/Switch4/knixx_SW4_00/3D_VIEW_TOP_6.png)
+![knixx_SW4_00_top 6SW version](https://raw.githubusercontent.com/area3001/knixx/master/HW/Switch4/knixx_SW4_00/3D_VIEW_TOP_6.png)
 
 #### Bottom 3D render
 
-![knixx_SW4_00_bot](https://raw.githubusercontent.com/area3001/knixx/master/Switch4/knixx_SW4_00/3D_VIEW_BOT.png)
+![knixx_SW4_00_bot](https://raw.githubusercontent.com/area3001/knixx/master/HW/Switch4/knixx_SW4_00/3D_VIEW_BOT.png)
 
 ### knixx ???
 
