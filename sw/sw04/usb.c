@@ -58,7 +58,7 @@ static const struct usb_endpoint_descriptor comm_endp[] = {{
 	.bDescriptorType = USB_DT_ENDPOINT,
 	.bEndpointAddress = 0x82,
 	.bmAttributes = USB_ENDPOINT_ATTR_INTERRUPT,
-	.wMaxPacketSize = 16,
+	.wMaxPacketSize = USB_INT_MAX_PACKET_SIZE,
 	.bInterval = 128,
 }};
 
@@ -67,14 +67,14 @@ static const struct usb_endpoint_descriptor data_endp[] = {{
 	.bDescriptorType = USB_DT_ENDPOINT,
 	.bEndpointAddress = 0x01,
 	.bmAttributes = USB_ENDPOINT_ATTR_BULK,
-	.wMaxPacketSize = 64,
+	.wMaxPacketSize = USB_BULK_MAX_PACKET_SIZE,
 	.bInterval = 0,
 }, {
 	.bLength = USB_DT_ENDPOINT_SIZE,
 	.bDescriptorType = USB_DT_ENDPOINT,
 	.bEndpointAddress = 0x81,
 	.bmAttributes = USB_ENDPOINT_ATTR_BULK,
-	.wMaxPacketSize = 64,
+	.wMaxPacketSize = USB_BULK_MAX_PACKET_SIZE,
 	.bInterval = 0,
 }};
 
@@ -216,7 +216,7 @@ static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep)
 	int len = usbd_ep_read_packet(usbd_dev, ep, buf, 64);
 
 	if (len) {
-		usbd_ep_write_packet(usbd_dev, ep + 0x80, buf, len);
+		usbd_ep_write_packet(usbd_dev, ep + USB_EP_IN, buf, len);
 		buf[len] = 0;
 	}
 }
@@ -225,21 +225,23 @@ static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
 {
 	(void)wValue;
 
-	usbd_ep_setup(usbd_dev, 0x01, USB_ENDPOINT_ATTR_BULK, 64, cdcacm_data_rx_cb);
-	usbd_ep_setup(usbd_dev, 0x81, USB_ENDPOINT_ATTR_BULK, 64, NULL);
-	usbd_ep_setup(usbd_dev, 0x82, USB_ENDPOINT_ATTR_INTERRUPT, 16, NULL);
-	usbd_register_control_callback(
-				usbd_dev,
-				USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
-				USB_REQ_TYPE_TYPE | USB_REQ_TYPE_RECIPIENT,
-				cdcacm_control_request);
+	usbd_ep_setup(usbd_dev, 0x01, USB_ENDPOINT_ATTR_BULK,
+		USB_BULK_MAX_PACKET_SIZE, cdcacm_data_rx_cb);
+	usbd_ep_setup(usbd_dev, 0x81, USB_ENDPOINT_ATTR_BULK,
+		USB_BULK_MAX_PACKET_SIZE, NULL);
+	usbd_ep_setup(usbd_dev, 0x82, USB_ENDPOINT_ATTR_INTERRUPT,
+		USB_INT_MAX_PACKET_SIZE, NULL);
+	usbd_register_control_callback(usbd_dev,
+		USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
+		USB_REQ_TYPE_TYPE | USB_REQ_TYPE_RECIPIENT,
+		cdcacm_control_request);
 }
 
 void usb_setup(void)
 {
 	rcc_periph_clock_enable(RCC_USB);
-	dev = usbd_init(&st_usbfs_v2_usb_driver, &descr, &config, usb_strings,
-	                3, usbd_control_buffer, sizeof(usbd_control_buffer));
+	dev = usbd_init(&st_usbfs_v2_usb_driver, &descr, &config, usb_strings, 3,
+		usbd_control_buffer, sizeof(usbd_control_buffer));
 	usbd_register_set_config_callback(dev, cdcacm_set_config);
 }
 
