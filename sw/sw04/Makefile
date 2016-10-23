@@ -22,7 +22,7 @@
 ## SOFTWARE.
 ##
 
-OBJS =
+OBJS = usb.o
 BINARY = main
 
 OPENCM3_DIR = ../libopencm3

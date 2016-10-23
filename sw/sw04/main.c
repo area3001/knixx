@@ -25,9 +25,7 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/flash.h>
 #include <libopencm3/stm32/gpio.h>
-
-#define PORT_LED GPIOA
-#define PIN_LED GPIO5
+#include "usb.h"
 
 static void rcc_wait_for_osc_not_ready(enum rcc_osc osc)
 {
@@ -74,6 +72,7 @@ static void clock_setup(void)
 	rcc_set_ppre(RCC_CFGR_PPRE_NODIV);
 	rcc_apb1_frequency = 48000000UL;
 	rcc_ahb_frequency = 48000000UL;
+	rcc_set_usbclk_source(RCC_PLL);
 }
 
 static void mco_setup(void)
@@ -85,24 +84,14 @@ static void mco_setup(void)
 	rcc_set_mco(RCC_CFGR_MCO_HSE);
 }
 
-static void gpio_setup(void)
-{
-	rcc_periph_clock_enable(RCC_GPIOA);
-	gpio_mode_setup(PORT_LED, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, PIN_LED);
-}
-
 int main(void)
 {
-	int i;
-
 	clock_setup();
 	mco_setup();
-	gpio_setup();
+	usb_setup();
+
 	while (1) {
-		gpio_toggle(PORT_LED, PIN_LED);
-		for (i = 0; i < 100000; i++) {
-			__asm__("nop");
-		}
+		usb_poll();
 	}
 
 	return 0;
