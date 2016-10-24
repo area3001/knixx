@@ -26,6 +26,7 @@
 #include <libopencm3/stm32/flash.h>
 #include <libopencm3/stm32/gpio.h>
 #include "usb.h"
+#include "cli.h"
 
 static void rcc_wait_for_osc_not_ready(enum rcc_osc osc)
 {
@@ -89,6 +90,7 @@ int main(void)
 	clock_setup();
 	mco_setup();
 	usb_setup();
+	cli_setup();
 
 	while (1) {
 		usb_poll();

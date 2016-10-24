@@ -23,11 +23,12 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 #include <libopencm3/stm32/rcc.h>
-/* #include <libopencm3/stm32/gpio.h> */
 #include <libopencm3/usb/usbd.h>
 #include <libopencm3/usb/cdc.h>
 #include "usb.h"
+#include "cli.h"
 
 usbd_device *dev;
 
@@ -212,12 +213,14 @@ static int cdcacm_control_request(usbd_device *usbd_dev,
 
 static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep)
 {
-	char buf[64];
-	int len = usbd_ep_read_packet(usbd_dev, ep, buf, 64);
+	int i, len;
+	char buf[USB_BULK_MAX_PACKET_SIZE];
 
+	len = usbd_ep_read_packet(usbd_dev, ep, buf, sizeof(buf));
 	if (len) {
-		usbd_ep_write_packet(usbd_dev, ep + USB_EP_IN, buf, len);
-		buf[len] = 0;
+		for (i = 0; i < len; i++) {
+			cli_insert_char(buf[i]);
+		}
 	}
 }
 
@@ -248,4 +251,18 @@ void usb_setup(void)
 void usb_poll(void)
 {
 	usbd_poll(dev);
+}
+
+void usb_print(const char *str)
+{
+	size_t i, len;
+
+	len = strlen(str);
+	for (i = 0; i < len / USB_BULK_MAX_PACKET_SIZE; i++) {
+		while (!usbd_ep_write_packet(dev, 0x81,
+			str + i * USB_BULK_MAX_PACKET_SIZE, USB_BULK_MAX_PACKET_SIZE));
+	}
+	while (!usbd_ep_write_packet(dev, 0x81,
+			str + i * USB_BULK_MAX_PACKET_SIZE,
+			len % USB_BULK_MAX_PACKET_SIZE));
 }

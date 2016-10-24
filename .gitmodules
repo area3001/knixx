@@ -1,3 +1,6 @@
 [submodule "sw/libopencm3"]
 	path = sw/libopencm3
 	url = https://github.com/libopencm3/libopencm3.git
+[submodule "sw/microrl"]
+	path = sw/microrl
+	url = https://github.com/Helius/microrl.git
