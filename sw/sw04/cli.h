@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+#define CLI_MMIO32(addr)	(*(volatile unsigned int *)(addr))
+
 typedef int (*cli_fun)(int argc, const char * const *argv);
 
 struct cli_cmd_s {

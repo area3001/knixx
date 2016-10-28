@@ -39,6 +39,7 @@ AS		:= $(PREFIX)-as
 OBJCOPY		:= $(PREFIX)-objcopy
 OBJDUMP		:= $(PREFIX)-objdump
 GDB		:= $(PREFIX)-gdb
+SIZE	:= $(PREFIX)-size
 STFLASH		= $(shell which st-flash)
 STYLECHECK	:= /checkpatch.pl
 STYLECHECKFLAGS	:= --no-tree -f --terse --mailback
@@ -110,6 +111,8 @@ LDFLAGS		+= -Wl,--gc-sections
 ifeq ($(V),99)
 LDFLAGS		+= -Wl,--print-gc-sections
 endif
+# use newlib-nano to shrink code size
+LDFLAGS		+= -specs=nano.specs
 
 ###############################################################################
 # Used libraries
@@ -163,6 +166,7 @@ $(LDSCRIPT):
 %.elf %.map: $(OBJS) $(LDSCRIPT) $(LIB_DIR)/lib$(LIBNAME).a
 	@#printf "  LD      $(*).elf\n"
 	$(Q)$(LD) $(LDFLAGS) $(ARCH_FLAGS) $(OBJS) $(LDLIBS) -o $(*).elf
+	$(SIZE) $(*).elf
 
 %.o: %.c
 	@#printf "  CC      $(*).c\n"

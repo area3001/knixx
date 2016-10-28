@@ -23,6 +23,8 @@
  */
 
 #include <stddef.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include "../microrl/src/microrl.h"
 #include "usb.h"
@@ -51,6 +53,34 @@ static int cli_hello(int argc, const char * const *argv)
 
 static int cli_help(int argc, const char * const *argv);
 
+static int cli_peek(int argc, const char * const *argv) {
+	unsigned int i, j, addr, lines;
+	char hex[9];
+
+	addr = strtoul(argv[1], NULL, 0);
+	lines = strtoul(argv[2], NULL, 0);
+	for (i = 0; i < lines; i++) {
+		usb_print("0x");
+		sprintf(hex, "%08x ", addr + i * 16);
+		usb_print(hex);
+		for (j = 0; j < 4; j++) {
+			sprintf(hex, " %08x", CLI_MMIO32(addr + ((i * 4) + j) * 4));
+			usb_print(hex);
+		}
+		usb_print("\r\n");
+	}
+	return 0;
+}
+
+static int cli_poke(int argc, const char * const *argv) {
+	unsigned int addr, value;
+
+	addr = strtoul(argv[1], NULL, 0);
+	value = strtoul(argv[2], NULL, 0);
+	*(unsigned int *)addr = value;
+	return 0;
+}
+
 static int cli_pry(int argc, const char * const *argv);
 
 static struct cli_cmd_s cli_cmd[] = { {
@@ -71,6 +101,18 @@ static struct cli_cmd_s cli_cmd[] = { {
 	.description = "this hidden help",
 	.hidden = true,
 	.exec = cli_pry
+}, {
+	.name = "peek",
+	.arity = 2,
+	.description = "<addr> <lines> : raw memory dump",
+	.hidden = true,
+	.exec = cli_peek
+}, {
+	.name = "poke",
+	.arity = 2,
+	.description = "<addr> <value> : set *addr to value",
+	.hidden = true,
+	.exec = cli_poke
 }, {
 	.name = NULL /* sentinel */
 } };
@@ -128,7 +170,7 @@ int cli_execute(int argc, const char * const *argv)
 		}
 		i++;
 	};
-	return 0;
+	return cli_help(0, NULL);
 }
 
 char ** cli_complete(int argc, const char * const *argv)
