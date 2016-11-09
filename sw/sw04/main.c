@@ -64,7 +64,7 @@ static void clock_setup(void)
 	rcc_wait_for_osc_not_ready(RCC_PLL);
 	flash_set_ws(FLASH_ACR_LATENCY_024_048MHZ);
 	/* 8MHz * 6 = 48MHz */
-	rcc_set_pll_multiplication_factor(RCC_CFGR_PLLMUL_MUL6);
+	rcc_set_pll_multiplication_factor(RCC_CFGR_PLLMUL_MUL3);
 	rcc_set_pll_source(RCC_HSE);
 	rcc_osc_on(RCC_PLL);
 	rcc_wait_for_osc_ready(RCC_PLL);
