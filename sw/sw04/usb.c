@@ -280,6 +280,11 @@ static const struct usb_config_descriptor config = {
 
 //TODO: PROBLEM IS THAT WE NEED TO INCLUDE THE IAD HERE !!!
 /*
+
+Found this struct: http://libopencm3.github.io/docs/latest/usb/html/structusb__iface__assoc__descriptor.html
+
+interface point should contain the IAD as well and as a first
+
     // IAD
     0x08,	// bLength: Interface Descriptor size
     0x0B,	// bDescriptorType: IAD
