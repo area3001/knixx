@@ -243,7 +243,23 @@ static const struct usb_interface_descriptor data_iface2[] = {{
 
 	.endpoint = data_endp2,
 }};
+
+static const struct usb_iface_assoc_descriptor iad_iface[] = {{
+	.bLength = 0x08,		// 8 bytes in this struct
+	.bDescriptorType = 0x08, 	// IAD
+	.bFirstInterface = 0x00,
+	.bInterfaceCount = 0x02,
+	.bFunctionClass = 0x02, 	// Function class CDC
+	.bFunctionSubClass = 0x02,
+	.bFunctionProtocol = 0x01,
+	.iFunction = 0x02,
+}};
+
 static const struct usb_interface ifaces[] = {
+{
+	.num_altsetting = 1,
+	.altsetting = iad_iface,	
+},
 {
 	.num_altsetting = 1,
 	.altsetting = comm_iface1,
@@ -276,20 +292,6 @@ static const struct usb_config_descriptor config = {
   .iConfiguration 	= 0x00,                              /* iConfiguration: no string to describe this configuration */
   .bmAttributes 	= USB_CONFIG_BUS_POWERED, /*|*/       /* bmAttributes */
   .bMaxPower 		= USB_CONFIG_POWER_MA(100),          /* bMaxPower, device power consumption is 100 mA */
-
-
-//TODO: PROBLEM IS THAT WE NEED TO INCLUDE THE IAD HERE !!!
-/*
-    // IAD
-    0x08,	// bLength: Interface Descriptor size
-    0x0B,	// bDescriptorType: IAD
-    0x00,	// bFirstInterface
-    0x02,	// bInterfaceCount
-    0x02,	// bFunctionClass: CDC
-    0x02,	// bFunctionSubClass
-    0x01,	// bFunctionProtocol 
-    0x02, // iFunction
-*/
 
   .interface = ifaces,
 /*  .interface = IAD_CDC_IF_DESC_SET( USB_CDC_CIF_NUM0, USB_CDC_DIF_NUM0, USB_ENDPOINT_IN(1), USB_ENDPOINT_OUT(2), USB_ENDPOINT_IN(2) ),
