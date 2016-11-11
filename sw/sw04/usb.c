@@ -42,20 +42,23 @@ enum {
 
 usbd_device *dev;
 
+// For an overview of what the following block contains please see:
+// http://www.beyondlogic.org/usbnutshell/usb5.shtml
+
 static const struct usb_device_descriptor descr = {
-	.bLength = USB_DT_DEVICE_SIZE,
-	.bDescriptorType = USB_DT_DEVICE,
-	.bcdUSB = 0x0200,
-	.bDeviceClass = 0xEF, 		// changed to Misc Device Class
-	.bDeviceSubClass = 0x02,	// changed to Common
-	.bDeviceProtocol = 0x01,	// changed to IAD protocol
-	.bMaxPacketSize0 = 64,		// Max packet size
-	.idVendor = 0x1209,		// InterBiometrics
-	.idProduct = 0xa7ea,		// Our own
-	.bcdDevice = 0x0200,		// Contains device release number
-	.iManufacturer = 1, 		/* Index of string descriptor describing manufacturer */
-	.iProduct = 2, 			/* Index of string descriptor describing product */
-	.iSerialNumber = 3,		/* Index of string descriptor describing the device's serial number */
+	.bLength 		= USB_DT_DEVICE_SIZE,	// Should be 0x12 or 18d
+	.bDescriptorType 	= USB_DT_DEVICE,	// 0x01
+	.bcdUSB 		= 0x0200,
+	.bDeviceClass 		= 0xEF, 		// changed to Misc Device Class
+	.bDeviceSubClass 	= 0x02,			// changed to Common
+	.bDeviceProtocol 	= 0x01,			// changed to IAD protocol
+	.bMaxPacketSize0 	= 64,			// Max packet size, or 0x40
+	.idVendor 		= 0x1209,		// InterBiometrics
+	.idProduct 		= 0xa7ea,		// Our own
+	.bcdDevice 		= 0x0200,		// Contains device release number
+	.iManufacturer 		= 1, 			/* Index of string descriptor describing manufacturer */
+	.iProduct 		= 2, 			/* Index of string descriptor describing product */
+	.iSerialNumber 		= 3,			/* Index of string descriptor describing the device's serial number */
 	.bNumConfigurations = 1,
 };
 
@@ -244,7 +247,18 @@ static const struct usb_interface_descriptor data_iface2[] = {{
 	.endpoint = data_endp2,
 }};
 
-static const struct usb_iface_assoc_descriptor iad_iface[] = {{
+static const struct usb_iface_assoc_descriptor iad_iface1[] = {{
+	.bLength = 0x08,		// 8 bytes in this struct
+	.bDescriptorType = 0x08, 	// IAD
+	.bFirstInterface = 0x00,
+	.bInterfaceCount = 0x02,
+	.bFunctionClass = 0x02, 	// Function class CDC
+	.bFunctionSubClass = 0x02,
+	.bFunctionProtocol = 0x01,
+	.iFunction = 0x02,
+}};
+
+static const struct usb_iface_assoc_descriptor iad_iface2[] = {{
 	.bLength = 0x08,		// 8 bytes in this struct
 	.bDescriptorType = 0x08, 	// IAD
 	.bFirstInterface = 0x00,
@@ -278,47 +292,25 @@ static const struct usb_interface ifaces[] = {
 }
 };
 
-//const uint8_t Virtual_Com_Port_ConfigDescriptor[] =
+// For additional info: http://www.beyondlogic.org/usbnutshell/usb5.shtml#ConfigurationDescriptors
 static const struct usb_config_descriptor config = {
 /* Configuration 1 */
-  .bLength 		= USB_DT_CONFIGURATION_SIZE,       /* bLength */
-  .bDescriptorType 	= USB_DT_CONFIGURATION, /* bDescriptorType */
-  .wTotalLength = WBVAL(                             /* wTotalLength */
-      USB_CONFIGUARTION_DESC_SIZE
-    + 2 * IAD_CDC_IF_DESC_SET_SIZE
-  ), // TODO: This definitly needs to be checked!
-  .bNumInterfaces 	= USB_NUM_INTERFACES,                /* bNumInterfaces */
-  .bConfigurationValue 	= 0x01,                              /* bConfigurationValue: 0x01 is used to select this configuration */
-  .iConfiguration 	= 0x00,                              /* iConfiguration: no string to describe this configuration */
-  .bmAttributes 	= USB_CONFIG_BUS_POWERED, /*|*/       /* bmAttributes */
-  .bMaxPower 		= USB_CONFIG_POWER_MA(100),          /* bMaxPower, device power consumption is 100 mA */
+  .bLength 		= USB_DT_CONFIGURATION_SIZE,    /* bLength, should be 0x09 */
+  .bDescriptorType 	= USB_DT_CONFIGURATION, 	/* bDescriptorType, should be 0x02 */
 
-<<<<<<< HEAD
-=======
+  .wTotalLength 	= 141				// sum of the data in config including usb_config_descr
+  .bNumInterfaces 	= 0x04,                		/* bNumInterfaces */
+  .bConfigurationValue 	= 0x01,                         /* bConfigurationValue: 0x01 is used to select this configuration */
+  .iConfiguration 	= 0x00,                         /* iConfiguration: no string to describe this configuration */
+  .bmAttributes 	= 0xC0,       			/* bmAttributes 
+								D7 = reserved, set to one
+								D6 = self powered
+								D5 = Remote wake up
+								D4..0 = reserved, set to zero
+								*/
+  .bMaxPower 		= USB_CONFIG_POWER_MA(100),      /* bMaxPower, device power consumption is 100 mA, in 2mA increments */
 
-//TODO: PROBLEM IS THAT WE NEED TO INCLUDE THE IAD HERE !!!
-/*
-
-Found this struct: http://libopencm3.github.io/docs/latest/usb/html/structusb__iface__assoc__descriptor.html
-
-interface point should contain the IAD as well and as a first
-
-    // IAD
-    0x08,	// bLength: Interface Descriptor size
-    0x0B,	// bDescriptorType: IAD
-    0x00,	// bFirstInterface
-    0x02,	// bInterfaceCount
-    0x02,	// bFunctionClass: CDC
-    0x02,	// bFunctionSubClass
-    0x01,	// bFunctionProtocol 
-    0x02, // iFunction
-*/
-
->>>>>>> 73bb1f1c84ed87c1d722f76a244652cb5afdf9b5
   .interface = ifaces,
-/*  .interface = IAD_CDC_IF_DESC_SET( USB_CDC_CIF_NUM0, USB_CDC_DIF_NUM0, USB_ENDPOINT_IN(1), USB_ENDPOINT_OUT(2), USB_ENDPOINT_IN(2) ),
-  IAD_CDC_IF_DESC_SET( USB_CDC_CIF_NUM1, USB_CDC_DIF_NUM1, USB_ENDPOINT_IN(3), USB_ENDPOINT_OUT(4), USB_ENDPOINT_IN(4) )
-*/
 };
 
 static const char *usb_strings[3] = {
