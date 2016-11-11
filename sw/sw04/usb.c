@@ -293,6 +293,28 @@ static const struct usb_config_descriptor config = {
   .bmAttributes 	= USB_CONFIG_BUS_POWERED, /*|*/       /* bmAttributes */
   .bMaxPower 		= USB_CONFIG_POWER_MA(100),          /* bMaxPower, device power consumption is 100 mA */
 
+<<<<<<< HEAD
+=======
+
+//TODO: PROBLEM IS THAT WE NEED TO INCLUDE THE IAD HERE !!!
+/*
+
+Found this struct: http://libopencm3.github.io/docs/latest/usb/html/structusb__iface__assoc__descriptor.html
+
+interface point should contain the IAD as well and as a first
+
+    // IAD
+    0x08,	// bLength: Interface Descriptor size
+    0x0B,	// bDescriptorType: IAD
+    0x00,	// bFirstInterface
+    0x02,	// bInterfaceCount
+    0x02,	// bFunctionClass: CDC
+    0x02,	// bFunctionSubClass
+    0x01,	// bFunctionProtocol 
+    0x02, // iFunction
+*/
+
+>>>>>>> 73bb1f1c84ed87c1d722f76a244652cb5afdf9b5
   .interface = ifaces,
 /*  .interface = IAD_CDC_IF_DESC_SET( USB_CDC_CIF_NUM0, USB_CDC_DIF_NUM0, USB_ENDPOINT_IN(1), USB_ENDPOINT_OUT(2), USB_ENDPOINT_IN(2) ),
   IAD_CDC_IF_DESC_SET( USB_CDC_CIF_NUM1, USB_CDC_DIF_NUM1, USB_ENDPOINT_IN(3), USB_ENDPOINT_OUT(4), USB_ENDPOINT_IN(4) )
