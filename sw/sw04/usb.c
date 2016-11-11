@@ -270,7 +270,7 @@ static const struct usb_iface_assoc_descriptor iad_iface2[] = {{
 static const struct usb_interface ifaces[] = {
 {
 	.num_altsetting = 1,
-	.altsetting = iad_iface1,	
+	.iface_assoc = iad_iface1,	
 },
 {
 	.num_altsetting = 1,
@@ -282,7 +282,7 @@ static const struct usb_interface ifaces[] = {
 },
 {
 	.num_altsetting = 1,
-	.altsetting = iad_iface2,	
+	.iface_assoc = iad_iface2,	
 },
 {
 	.num_altsetting = 1,
@@ -391,13 +391,13 @@ static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
 {
 	(void)wValue;
 
-	usbd_ep_setup(usbd_dev, 0x01, USB_ENDPOINT_ATTR_BULK, USB_BULK_MAX_PACKET_SIZE, cdcacm_data_rx_cb1);
+	usbd_ep_setup(usbd_dev, 0x03, USB_ENDPOINT_ATTR_BULK, USB_BULK_MAX_PACKET_SIZE, cdcacm_data_rx_cb1);
 	usbd_ep_setup(usbd_dev, 0x81, USB_ENDPOINT_ATTR_BULK, USB_BULK_MAX_PACKET_SIZE, NULL);
 	usbd_ep_setup(usbd_dev, 0x82, USB_ENDPOINT_ATTR_INTERRUPT, USB_INT_MAX_PACKET_SIZE, NULL);
 
-	usbd_ep_setup(usbd_dev, 0x03, USB_ENDPOINT_ATTR_BULK, USB_BULK_MAX_PACKET_SIZE, cdcacm_data_rx_cb2);
-	usbd_ep_setup(usbd_dev, 0x83, USB_ENDPOINT_ATTR_BULK, USB_BULK_MAX_PACKET_SIZE, NULL);
-	usbd_ep_setup(usbd_dev, 0x84, USB_ENDPOINT_ATTR_INTERRUPT, USB_INT_MAX_PACKET_SIZE, NULL);
+	usbd_ep_setup(usbd_dev, 0x06, USB_ENDPOINT_ATTR_BULK, USB_BULK_MAX_PACKET_SIZE, cdcacm_data_rx_cb2);
+	usbd_ep_setup(usbd_dev, 0x84, USB_ENDPOINT_ATTR_BULK, USB_BULK_MAX_PACKET_SIZE, NULL);
+	usbd_ep_setup(usbd_dev, 0x85, USB_ENDPOINT_ATTR_INTERRUPT, USB_INT_MAX_PACKET_SIZE, NULL);
 
 	usbd_register_control_callback(usbd_dev,
 		USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
