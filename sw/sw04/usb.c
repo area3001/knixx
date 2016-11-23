@@ -46,8 +46,8 @@ usbd_device *dev;
 // http://www.beyondlogic.org/usbnutshell/usb5.shtml
 
 static const struct usb_device_descriptor descr = {
-	.bLength 		= USB_DT_DEVICE_SIZE,	// Should be 0x12 or 18d
-	.bDescriptorType 	= USB_DT_DEVICE,	// 0x01
+	.bLength 		= 0x12,	// Should be 0x12 or 18d USB_DT_DEVICE_SIZE
+	.bDescriptorType 	= 0x01,	// 0x01 USB_DT_DEVICE
 	.bcdUSB 		= 0x0200,
 	.bDeviceClass 		= 0xEF, 		// changed to Misc Device Class
 	.bDeviceSubClass 	= 0x02,			// changed to Common
@@ -59,7 +59,7 @@ static const struct usb_device_descriptor descr = {
 	.iManufacturer 		= 1, 			/* Index of string descriptor describing manufacturer */
 	.iProduct 		= 2, 			/* Index of string descriptor describing product */
 	.iSerialNumber 		= 3,			/* Index of string descriptor describing the device's serial number */
-	.bNumConfigurations = 1,
+	.bNumConfigurations 	= 1,
 };
 
 /*
