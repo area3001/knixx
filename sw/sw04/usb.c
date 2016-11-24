@@ -397,9 +397,9 @@ static const char *usb_strings[6] = {
 	"Knixx",
 	"KNIS4A",
 	"KX01000001",
-	"console",
-	"debug",
-	"tpuart"
+	"knixx/console",
+	"knixx/debug",
+	"knixx/tpuart"
 };
 
 static int cdcacm_control_request(usbd_device *usbd_dev,
