@@ -123,7 +123,7 @@ static const struct usb_interface_descriptor console_comm_iface[] = {{
 	.bInterfaceClass = USB_CLASS_CDC,
 	.bInterfaceSubClass = USB_CDC_SUBCLASS_ACM,
 	.bInterfaceProtocol = USB_CDC_PROTOCOL_AT,
-	.iInterface = 0,
+	.iInterface = 4,
 
 	.endpoint = console_comm_endp,
 	.extra = &console_cdcacm_functional_descriptors,
@@ -155,6 +155,107 @@ static const struct usb_iface_assoc_descriptor console_assoc = {
 	.iFunction = 0,
 };
 
+static const struct usb_endpoint_descriptor debug_comm_endp[] = {{
+	.bLength = USB_DT_ENDPOINT_SIZE,
+	.bDescriptorType = USB_DT_ENDPOINT,
+	.bEndpointAddress = 0x84,
+	.bmAttributes = USB_ENDPOINT_ATTR_INTERRUPT,
+	.wMaxPacketSize = USB_INT_MAX_PACKET_SIZE,
+	.bInterval = 128,
+}};
+
+static const struct usb_endpoint_descriptor debug_data_endp[] = {{
+	.bLength = USB_DT_ENDPOINT_SIZE,
+	.bDescriptorType = USB_DT_ENDPOINT,
+	.bEndpointAddress = 0x03,
+	.bmAttributes = USB_ENDPOINT_ATTR_BULK,
+	.wMaxPacketSize = USB_BULK_MAX_PACKET_SIZE,
+	.bInterval = 0,
+}, {
+	.bLength = USB_DT_ENDPOINT_SIZE,
+	.bDescriptorType = USB_DT_ENDPOINT,
+	.bEndpointAddress = 0x83,
+	.bmAttributes = USB_ENDPOINT_ATTR_BULK,
+	.wMaxPacketSize = USB_BULK_MAX_PACKET_SIZE,
+	.bInterval = 0,
+}};
+
+static const struct {
+	struct usb_cdc_header_descriptor header;
+	struct usb_cdc_call_management_descriptor call_mgmt;
+	struct usb_cdc_acm_descriptor acm;
+	struct usb_cdc_union_descriptor cdc_union;
+} __attribute__((packed)) debug_cdcacm_functional_descriptors = {
+	.header = {
+		.bFunctionLength = sizeof(struct usb_cdc_header_descriptor),
+		.bDescriptorType = CS_INTERFACE,
+		.bDescriptorSubtype = USB_CDC_TYPE_HEADER,
+		.bcdCDC = 0x0110,
+	},
+	.call_mgmt = {
+		.bFunctionLength =
+			sizeof(struct usb_cdc_call_management_descriptor),
+		.bDescriptorType = CS_INTERFACE,
+		.bDescriptorSubtype = USB_CDC_TYPE_CALL_MANAGEMENT,
+		.bmCapabilities = 0,
+		.bDataInterface = 3,
+	},
+	.acm = {
+		.bFunctionLength = sizeof(struct usb_cdc_acm_descriptor),
+		.bDescriptorType = CS_INTERFACE,
+		.bDescriptorSubtype = USB_CDC_TYPE_ACM,
+		.bmCapabilities = 0,
+	},
+	.cdc_union = {
+		.bFunctionLength = sizeof(struct usb_cdc_union_descriptor),
+		.bDescriptorType = CS_INTERFACE,
+		.bDescriptorSubtype = USB_CDC_TYPE_UNION,
+		.bControlInterface = 2,
+		.bSubordinateInterface0 = 3,
+	 },
+};
+
+static const struct usb_interface_descriptor debug_comm_iface[] = {{
+	.bLength = USB_DT_INTERFACE_SIZE,
+	.bDescriptorType = USB_DT_INTERFACE,
+	.bInterfaceNumber = 2,
+	.bAlternateSetting = 0,
+	.bNumEndpoints = 1,
+	.bInterfaceClass = USB_CLASS_CDC,
+	.bInterfaceSubClass = USB_CDC_SUBCLASS_ACM,
+	.bInterfaceProtocol = USB_CDC_PROTOCOL_AT,
+	.iInterface = 5,
+
+	.endpoint = debug_comm_endp,
+	.extra = &debug_cdcacm_functional_descriptors,
+	.extralen = sizeof(debug_cdcacm_functional_descriptors),
+}};
+
+static const struct usb_interface_descriptor debug_data_iface[] = {{
+	.bLength = USB_DT_INTERFACE_SIZE,
+	.bDescriptorType = USB_DT_INTERFACE,
+	.bInterfaceNumber = 3,
+	.bAlternateSetting = 0,
+	.bNumEndpoints = 2,
+	.bInterfaceClass = USB_CLASS_DATA,
+	.bInterfaceSubClass = 0,
+	.bInterfaceProtocol = 0,
+	.iInterface = 0,
+
+	.endpoint = debug_data_endp,
+}};
+
+static const struct usb_iface_assoc_descriptor debug_assoc = {
+	.bLength = USB_DT_INTERFACE_ASSOCIATION_SIZE,
+	.bDescriptorType = USB_DT_INTERFACE_ASSOCIATION,
+	.bFirstInterface = 2,
+	.bInterfaceCount = 2,
+	.bFunctionClass = USB_CLASS_CDC,
+	.bFunctionSubClass = USB_CDC_SUBCLASS_ACM,
+	.bFunctionProtocol = USB_CDC_PROTOCOL_AT,
+	.iFunction = 0,
+};
+
 static const struct usb_interface ifaces[] = {{
 	.num_altsetting = 1,
 	.iface_assoc = &console_assoc,
@@ -162,13 +263,20 @@ static const struct usb_interface ifaces[] = {{
 }, {
 	.num_altsetting = 1,
 	.altsetting = console_data_iface,
+}, {
+	.num_altsetting = 1,
+	.iface_assoc = &debug_assoc,
+	.altsetting = debug_comm_iface,
+}, {
+	.num_altsetting = 1,
+	.altsetting = debug_data_iface,
 }};
 
 static const struct usb_config_descriptor config = {
 	.bLength = USB_DT_CONFIGURATION_SIZE,
 	.bDescriptorType = USB_DT_CONFIGURATION,
 	.wTotalLength = 0,
-	.bNumInterfaces = 2,
+	.bNumInterfaces = 4,
 	.bConfigurationValue = 1,
 	.iConfiguration = 0,
 	.bmAttributes = 0x80,
@@ -177,14 +285,13 @@ static const struct usb_config_descriptor config = {
 	.interface = ifaces,
 };
 
-static const char *usb_strings[3] = {
+static const char *usb_strings[5] = {
 	"Knixx",
-	"SW04A",
+	"KNIS4A",
 	"KX01000001",
+	"Console",
+	"Debug"
 };
-
-/* Buffer to be used for control requests. */
-uint8_t usbd_control_buffer[128];
 
 static int cdcacm_control_request(usbd_device *usbd_dev,
 	struct usb_setup_data *req, uint8_t **buf, uint16_t *len,
@@ -223,7 +330,7 @@ static int cdcacm_control_request(usbd_device *usbd_dev,
 	return 0;
 }
 
-static void cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep)
+static void console_cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep)
 {
 	int i, len;
 	char buf[USB_BULK_MAX_PACKET_SIZE];
@@ -241,10 +348,16 @@ static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
 	(void)wValue;
 
 	usbd_ep_setup(usbd_dev, 0x01, USB_ENDPOINT_ATTR_BULK,
-		USB_BULK_MAX_PACKET_SIZE, cdcacm_data_rx_cb);
+		USB_BULK_MAX_PACKET_SIZE, console_cdcacm_data_rx_cb);
 	usbd_ep_setup(usbd_dev, 0x81, USB_ENDPOINT_ATTR_BULK,
 		USB_BULK_MAX_PACKET_SIZE, NULL);
 	usbd_ep_setup(usbd_dev, 0x82, USB_ENDPOINT_ATTR_INTERRUPT,
+		USB_INT_MAX_PACKET_SIZE, NULL);
+	usbd_ep_setup(usbd_dev, 0x03, USB_ENDPOINT_ATTR_BULK,
+		USB_BULK_MAX_PACKET_SIZE, console_cdcacm_data_rx_cb);
+	usbd_ep_setup(usbd_dev, 0x83, USB_ENDPOINT_ATTR_BULK,
+		USB_BULK_MAX_PACKET_SIZE, NULL);
+	usbd_ep_setup(usbd_dev, 0x84, USB_ENDPOINT_ATTR_INTERRUPT,
 		USB_INT_MAX_PACKET_SIZE, NULL);
 	usbd_register_control_callback(usbd_dev,
 		USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
@@ -252,10 +365,13 @@ static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
 		cdcacm_control_request);
 }
 
+/* Buffer to be used for control requests. */
+uint8_t usbd_control_buffer[256];
+
 void usb_setup(void)
 {
 	rcc_periph_clock_enable(RCC_USB);
-	dev = usbd_init(&st_usbfs_v2_usb_driver, &descr, &config, usb_strings, 3,
+	dev = usbd_init(&st_usbfs_v2_usb_driver, &descr, &config, usb_strings, 5,
 		usbd_control_buffer, sizeof(usbd_control_buffer));
 	usbd_register_set_config_callback(dev, cdcacm_set_config);
 }
