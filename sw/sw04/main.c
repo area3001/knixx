@@ -27,6 +27,7 @@
 #include <libopencm3/stm32/gpio.h>
 #include "usb.h"
 #include "cli.h"
+#include "button.h"
 
 static void rcc_wait_for_osc_not_ready(enum rcc_osc osc)
 {
@@ -63,7 +64,7 @@ static void clock_setup(void)
 	rcc_osc_off(RCC_PLL);
 	rcc_wait_for_osc_not_ready(RCC_PLL);
 	flash_set_ws(FLASH_ACR_LATENCY_024_048MHZ);
-	/* 8MHz * 6 = 48MHz */
+	/* 16MHz * 3 = 48MHz */
 	rcc_set_pll_multiplication_factor(RCC_CFGR_PLLMUL_MUL3);
 	rcc_set_pll_source(RCC_HSE);
 	rcc_osc_on(RCC_PLL);
