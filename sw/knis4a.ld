@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-/* Linker script for knixx sw04 (STM32F070C6T6, 32K flash, 6K RAM). */
+/* Linker script for Knixx KNIS4A (STM32F070C6T6, 32K flash, 6K RAM). */
 
 /* Define memory regions. */
 MEMORY

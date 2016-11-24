@@ -26,7 +26,7 @@ OBJS = ../microrl/src/microrl.o cli.o usb.o
 BINARY = main
 
 OPENCM3_DIR = ../libopencm3
-LDSCRIPT = ../sw04.ld
+LDSCRIPT = ../knis4a.ld
 
 include ../libopencm3.target.mk
 
