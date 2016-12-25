@@ -27,6 +27,7 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/usb/usbd.h>
 #include <libopencm3/usb/cdc.h>
+#include <libopencm3/usb/dfu.h>
 #include "usb.h"
 #include "cli.h"
 
@@ -357,6 +358,30 @@ static const struct usb_iface_assoc_descriptor tpuart_assoc = {
 	.iFunction = 0,
 };
 
+const struct usb_dfu_descriptor dfu_function = {
+	.bLength = sizeof(struct usb_dfu_descriptor),
+	.bDescriptorType = DFU_FUNCTIONAL,
+	.bmAttributes = USB_DFU_CAN_DOWNLOAD | USB_DFU_WILL_DETACH,
+	.wDetachTimeout = 255,
+	.wTransferSize = 1024,
+	.bcdDFUVersion = 0x011a,
+};
+
+const struct usb_interface_descriptor dfu_iface = {
+	.bLength = USB_DT_INTERFACE_SIZE,
+	.bDescriptorType = USB_DT_INTERFACE,
+	.bInterfaceNumber = 6,
+	.bAlternateSetting = 0,
+	.bNumEndpoints = 0,
+	.bInterfaceClass = 0xfe,
+	.bInterfaceSubClass = 1,
+	.bInterfaceProtocol = 1,
+	.iInterface = 7,
+
+	.extra = &dfu_function,
+	.extralen = sizeof(dfu_function),
+};
+
 static const struct usb_interface ifaces[] = {{
 	.num_altsetting = 1,
 	.iface_assoc = &console_assoc,
@@ -378,13 +403,16 @@ static const struct usb_interface ifaces[] = {{
 }, {
 	.num_altsetting = 1,
 	.altsetting = tpuart_data_iface,
+}, {
+	.num_altsetting = 1,
+	.altsetting = &dfu_iface,
 }};
 
 static const struct usb_config_descriptor config = {
 	.bLength = USB_DT_CONFIGURATION_SIZE,
 	.bDescriptorType = USB_DT_CONFIGURATION,
 	.wTotalLength = 0,
-	.bNumInterfaces = 6,
+	.bNumInterfaces = 7,
 	.bConfigurationValue = 1,
 	.iConfiguration = 0,
 	.bmAttributes = 0x80,
@@ -393,13 +421,14 @@ static const struct usb_config_descriptor config = {
 	.interface = ifaces,
 };
 
-static const char *usb_strings[6] = {
+static const char *usb_strings[7] = {
 	"Knixx",
 	"KNIS4A",
 	"KX01000001",
 	"knixx/console",
 	"knixx/debug",
-	"knixx/tpuart"
+	"knixx/tpuart",
+	"DfuSe-specific"
 };
 
 static int cdcacm_control_request(usbd_device *usbd_dev,
@@ -452,6 +481,26 @@ static void console_cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep)
 	}
 }
 
+static void dfu_detach_complete(usbd_device *usbd_dev, struct usb_setup_data *req)
+{
+	(void)req;
+	(void)usbd_dev;
+}
+
+static int dfu_control_request(
+	usbd_device *usbd_dev, struct usb_setup_data *req, uint8_t **buf,
+	uint16_t *len, void (**complete)(usbd_device *, struct usb_setup_data *))
+{
+	(void)buf;
+	(void)len;
+	(void)usbd_dev;
+
+	if ((req->bmRequestType != 0x21) || (req->bRequest != DFU_DETACH))
+		return 0; /* Only accept class request. */
+	*complete = dfu_detach_complete;
+	return 1;
+}
+
 static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
 {
 	(void)wValue;
@@ -478,6 +527,10 @@ static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
 		USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
 		USB_REQ_TYPE_TYPE | USB_REQ_TYPE_RECIPIENT,
 		cdcacm_control_request);
+	usbd_register_control_callback(usbd_dev,
+		USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
+		USB_REQ_TYPE_TYPE | USB_REQ_TYPE_RECIPIENT,
+			dfu_control_request);
 }
 
 /* Buffer to be used for control requests. */
@@ -486,7 +539,7 @@ uint8_t usbd_control_buffer[256];
 void usb_setup(void)
 {
 	rcc_periph_clock_enable(RCC_USB);
-	dev = usbd_init(&st_usbfs_v2_usb_driver, &descr, &config, usb_strings, 6,
+	dev = usbd_init(&st_usbfs_v2_usb_driver, &descr, &config, usb_strings, 7,
 		usbd_control_buffer, sizeof(usbd_control_buffer));
 	usbd_register_set_config_callback(dev, cdcacm_set_config);
 }
