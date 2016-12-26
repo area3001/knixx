@@ -28,6 +28,7 @@
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/exti.h>
 #include "usb.h"
+#include "log.h"
 #include "button.h"
 
 void button_setup(void)
@@ -53,14 +54,10 @@ void button_setup(void)
 
 static void button_handler(enum button btn, bool low)
 {
-	char buf[64];
-
 	if (low) {
-		sprintf(buf, "[button] %i pushed\r\n", btn + 1);
-		usb_print_debug(buf);
+		log_write(LOG_TOPIC_BUTTON, LOG_LVL_INFO, "%i pushed", btn + 1);
 	} else {
-		sprintf(buf, "[button] %i released\r\n", btn + 1);
-		usb_print_debug(buf);
+		log_write(LOG_TOPIC_BUTTON, LOG_LVL_INFO, "%i released", btn + 1);
 	}
 }
 

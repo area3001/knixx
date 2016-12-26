@@ -2,6 +2,6 @@
 
 ATTRS{idVendor}=="1209" ATTRS{idProduct}=="a7ea", ENV{ID_MM_DEVICE_IGNORE}="1"
 SUBSYSTEMS=="usb", ACTION=="add", ATTRS{interface}=="knixx/console", GROUP="knixx", MODE="0666", SYMLINK+="knixx/console"
-SUBSYSTEMS=="usb", ACTION=="add", ATTRS{interface}=="knixx/debug", GROUP="knixx", MODE="0666", SYMLINK+="knixx/debug"
+SUBSYSTEMS=="usb", ACTION=="add", ATTRS{interface}=="knixx/log", GROUP="knixx", MODE="0666", SYMLINK+="knixx/log"
 SUBSYSTEMS=="usb", ACTION=="add", ATTRS{interface}=="knixx/tpuart", GROUP="knixx", MODE="0666", SYMLINK+="knixx/tpuart"
 

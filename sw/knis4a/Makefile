@@ -22,7 +22,7 @@
 ## SOFTWARE.
 ##
 
-OBJS = ../microrl/src/microrl.o cli.o usb.o button.o
+OBJS = ../microrl/src/microrl.o cli.o usb.o button.o log.o
 BINARY = main
 
 OPENCM3_DIR = ../libopencm3

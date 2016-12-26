@@ -10,14 +10,14 @@
 
 enum usb_itf {
 	USB_ITF_CONSOLE	= 0,
-	USB_ITF_DEBUG = 2,
+	USB_ITF_LOG = 2,
 	USB_ITF_TPUART = 4,
 	USB_ITF_DFU = 6
 };
 
 void usb_setup(void);
 void usb_print_console(const char *str);
-void usb_print_debug(const char *str);
+void usb_print_log(const char *str);
 void usb_print_tpuart(const char *str);
 
 #endif
