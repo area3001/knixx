@@ -59,7 +59,7 @@ static const struct usb_device_descriptor descr = {
 static const struct usb_endpoint_descriptor console_comm_endp[] = {{
 	.bLength = USB_DT_ENDPOINT_SIZE,
 	.bDescriptorType = USB_DT_ENDPOINT,
-	.bEndpointAddress = 0x82,
+	.bEndpointAddress = EP_COMM(USB_ITF_CONSOLE),
 	.bmAttributes = USB_ENDPOINT_ATTR_INTERRUPT,
 	.wMaxPacketSize = USB_INT_MAX_PACKET_SIZE,
 	.bInterval = 128,
@@ -68,14 +68,14 @@ static const struct usb_endpoint_descriptor console_comm_endp[] = {{
 static const struct usb_endpoint_descriptor console_data_endp[] = {{
 	.bLength = USB_DT_ENDPOINT_SIZE,
 	.bDescriptorType = USB_DT_ENDPOINT,
-	.bEndpointAddress = 0x01,
+	.bEndpointAddress = EP_DATA_OUT(USB_ITF_CONSOLE),
 	.bmAttributes = USB_ENDPOINT_ATTR_BULK,
 	.wMaxPacketSize = USB_BULK_MAX_PACKET_SIZE,
 	.bInterval = 0,
 }, {
 	.bLength = USB_DT_ENDPOINT_SIZE,
 	.bDescriptorType = USB_DT_ENDPOINT,
-	.bEndpointAddress = 0x81,
+	.bEndpointAddress = EP_DATA_IN(USB_ITF_CONSOLE),
 	.bmAttributes = USB_ENDPOINT_ATTR_BULK,
 	.wMaxPacketSize = USB_BULK_MAX_PACKET_SIZE,
 	.bInterval = 0,
@@ -160,7 +160,7 @@ static const struct usb_iface_assoc_descriptor console_assoc = {
 static const struct usb_endpoint_descriptor debug_comm_endp[] = {{
 	.bLength = USB_DT_ENDPOINT_SIZE,
 	.bDescriptorType = USB_DT_ENDPOINT,
-	.bEndpointAddress = 0x84,
+	.bEndpointAddress = EP_COMM(USB_ITF_DEBUG),
 	.bmAttributes = USB_ENDPOINT_ATTR_INTERRUPT,
 	.wMaxPacketSize = USB_INT_MAX_PACKET_SIZE,
 	.bInterval = 128,
@@ -169,14 +169,14 @@ static const struct usb_endpoint_descriptor debug_comm_endp[] = {{
 static const struct usb_endpoint_descriptor debug_data_endp[] = {{
 	.bLength = USB_DT_ENDPOINT_SIZE,
 	.bDescriptorType = USB_DT_ENDPOINT,
-	.bEndpointAddress = 0x03,
+	.bEndpointAddress = EP_DATA_OUT(USB_ITF_DEBUG),
 	.bmAttributes = USB_ENDPOINT_ATTR_BULK,
 	.wMaxPacketSize = USB_BULK_MAX_PACKET_SIZE,
 	.bInterval = 0,
 }, {
 	.bLength = USB_DT_ENDPOINT_SIZE,
 	.bDescriptorType = USB_DT_ENDPOINT,
-	.bEndpointAddress = 0x83,
+	.bEndpointAddress = EP_DATA_IN(USB_ITF_DEBUG),
 	.bmAttributes = USB_ENDPOINT_ATTR_BULK,
 	.wMaxPacketSize = USB_BULK_MAX_PACKET_SIZE,
 	.bInterval = 0,
@@ -261,7 +261,7 @@ static const struct usb_iface_assoc_descriptor debug_assoc = {
 static const struct usb_endpoint_descriptor tpuart_comm_endp[] = {{
 	.bLength = USB_DT_ENDPOINT_SIZE,
 	.bDescriptorType = USB_DT_ENDPOINT,
-	.bEndpointAddress = 0x86,
+	.bEndpointAddress = EP_COMM(USB_ITF_TPUART),
 	.bmAttributes = USB_ENDPOINT_ATTR_INTERRUPT,
 	.wMaxPacketSize = USB_INT_MAX_PACKET_SIZE,
 	.bInterval = 128,
@@ -270,14 +270,14 @@ static const struct usb_endpoint_descriptor tpuart_comm_endp[] = {{
 static const struct usb_endpoint_descriptor tpuart_data_endp[] = {{
 	.bLength = USB_DT_ENDPOINT_SIZE,
 	.bDescriptorType = USB_DT_ENDPOINT,
-	.bEndpointAddress = 0x05,
+	.bEndpointAddress = EP_DATA_OUT(USB_ITF_TPUART),
 	.bmAttributes = USB_ENDPOINT_ATTR_BULK,
 	.wMaxPacketSize = USB_BULK_MAX_PACKET_SIZE,
 	.bInterval = 0,
 }, {
 	.bLength = USB_DT_ENDPOINT_SIZE,
 	.bDescriptorType = USB_DT_ENDPOINT,
-	.bEndpointAddress = 0x85,
+	.bEndpointAddress = EP_DATA_IN(USB_ITF_TPUART),
 	.bmAttributes = USB_ENDPOINT_ATTR_BULK,
 	.wMaxPacketSize = USB_BULK_MAX_PACKET_SIZE,
 	.bInterval = 0,
@@ -506,23 +506,23 @@ static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
 {
 	(void)wValue;
 
-	usbd_ep_setup(usbd_dev, 0x01, USB_ENDPOINT_ATTR_BULK,
+	usbd_ep_setup(usbd_dev, EP_DATA_OUT(USB_ITF_CONSOLE), USB_ENDPOINT_ATTR_BULK,
 		USB_BULK_MAX_PACKET_SIZE, console_cdcacm_data_rx_cb);
-	usbd_ep_setup(usbd_dev, 0x81, USB_ENDPOINT_ATTR_BULK,
+	usbd_ep_setup(usbd_dev, EP_DATA_IN(USB_ITF_CONSOLE), USB_ENDPOINT_ATTR_BULK,
 		USB_BULK_MAX_PACKET_SIZE, NULL);
-	usbd_ep_setup(usbd_dev, 0x82, USB_ENDPOINT_ATTR_INTERRUPT,
+	usbd_ep_setup(usbd_dev, EP_COMM(USB_ITF_CONSOLE), USB_ENDPOINT_ATTR_INTERRUPT,
 		USB_INT_MAX_PACKET_SIZE, NULL);
-	usbd_ep_setup(usbd_dev, 0x03, USB_ENDPOINT_ATTR_BULK,
+	usbd_ep_setup(usbd_dev, EP_DATA_OUT(USB_ITF_DEBUG), USB_ENDPOINT_ATTR_BULK,
 		USB_BULK_MAX_PACKET_SIZE, console_cdcacm_data_rx_cb);
-	usbd_ep_setup(usbd_dev, 0x83, USB_ENDPOINT_ATTR_BULK,
+	usbd_ep_setup(usbd_dev, EP_DATA_IN(USB_ITF_DEBUG), USB_ENDPOINT_ATTR_BULK,
 		USB_BULK_MAX_PACKET_SIZE, NULL);
-	usbd_ep_setup(usbd_dev, 0x84, USB_ENDPOINT_ATTR_INTERRUPT,
+	usbd_ep_setup(usbd_dev, EP_COMM(USB_ITF_DEBUG), USB_ENDPOINT_ATTR_INTERRUPT,
 		USB_INT_MAX_PACKET_SIZE, NULL);
-	usbd_ep_setup(usbd_dev, 0x05, USB_ENDPOINT_ATTR_BULK,
+	usbd_ep_setup(usbd_dev, EP_DATA_OUT(USB_ITF_TPUART), USB_ENDPOINT_ATTR_BULK,
 		USB_BULK_MAX_PACKET_SIZE, console_cdcacm_data_rx_cb);
-	usbd_ep_setup(usbd_dev, 0x85, USB_ENDPOINT_ATTR_BULK,
+	usbd_ep_setup(usbd_dev, EP_DATA_IN(USB_ITF_TPUART), USB_ENDPOINT_ATTR_BULK,
 		USB_BULK_MAX_PACKET_SIZE, NULL);
-	usbd_ep_setup(usbd_dev, 0x86, USB_ENDPOINT_ATTR_INTERRUPT,
+	usbd_ep_setup(usbd_dev, EP_COMM(USB_ITF_TPUART), USB_ENDPOINT_ATTR_INTERRUPT,
 		USB_INT_MAX_PACKET_SIZE, NULL);
 	usbd_register_control_callback(usbd_dev,
 		USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
@@ -551,16 +551,31 @@ void usb_isr(void)
 	usbd_poll(dev);
 }
 
-void usb_print(const char *str)
+static void usb_print(enum usb_itf itf, const char *str)
 {
 	size_t i, len;
 
 	len = strlen(str);
 	for (i = 0; i < len / USB_BULK_MAX_PACKET_SIZE; i++) {
-		while (!usbd_ep_write_packet(dev, 0x81,
+		while (!usbd_ep_write_packet(dev, EP_DATA_IN(itf),
 			str + i * USB_BULK_MAX_PACKET_SIZE, USB_BULK_MAX_PACKET_SIZE));
 	}
-	while (!usbd_ep_write_packet(dev, 0x81,
+	while (!usbd_ep_write_packet(dev, EP_DATA_IN(itf),
 			str + i * USB_BULK_MAX_PACKET_SIZE,
 			len % USB_BULK_MAX_PACKET_SIZE));
+}
+
+void usb_print_console(const char *str)
+{
+	usb_print(USB_ITF_CONSOLE, str);
+}
+
+void usb_print_debug(const char *str)
+{
+	usb_print(USB_ITF_DEBUG, str);
+}
+
+void usb_print_tpuart(const char *str)
+{
+	usb_print(USB_ITF_TPUART, str);
 }

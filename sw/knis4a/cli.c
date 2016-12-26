@@ -34,7 +34,7 @@ microrl_t rl;
 
 static int cli_banner(void)
 {
-	usb_print(
+	usb_print_console(
 		" __          .__\r\n" 
 		"|  | __ ____ |__|__  ______  ___\r\n"
 		"|  |/ //    \\|  \\  \\/  /\\  \\/  /\r\n"
@@ -47,7 +47,7 @@ static int cli_banner(void)
 
 static int cli_hello(int argc, const char * const *argv)
 {
-	usb_print("world!\r\n");
+	usb_print_console("world!\r\n");
 	return 0;
 }
 
@@ -60,14 +60,14 @@ static int cli_peek(int argc, const char * const *argv) {
 	addr = strtoul(argv[1], NULL, 0);
 	lines = strtoul(argv[2], NULL, 0);
 	for (i = 0; i < lines; i++) {
-		usb_print("0x");
+		usb_print_console("0x");
 		sprintf(hex, "%08x ", addr + i * 16);
-		usb_print(hex);
+		usb_print_console(hex);
 		for (j = 0; j < 4; j++) {
 			sprintf(hex, " %08x", CLI_MMIO32(addr + ((i * 4) + j) * 4));
-			usb_print(hex);
+			usb_print_console(hex);
 		}
-		usb_print("\r\n");
+		usb_print_console("\r\n");
 	}
 	return 0;
 }
@@ -123,10 +123,10 @@ static int cli_help(int argc, const char * const *argv)
 
 	while (cli_cmd[i].name != NULL) {
 		if (!cli_cmd[i].hidden) {
-			usb_print(cli_cmd[i].name);
-			usb_print("\t");
-			usb_print(cli_cmd[i].description);
-			usb_print("\r\n");
+			usb_print_console(cli_cmd[i].name);
+			usb_print_console("\t");
+			usb_print_console(cli_cmd[i].description);
+			usb_print_console("\r\n");
 		}
 		i++;
 	}
@@ -139,10 +139,10 @@ static int cli_pry(int argc, const char * const *argv)
 
 	while (cli_cmd[i].name != NULL) {
 		if (cli_cmd[i].hidden) {
-			usb_print(cli_cmd[i].name);
-			usb_print("\t");
-			usb_print(cli_cmd[i].description);
-			usb_print("\r\n");
+			usb_print_console(cli_cmd[i].name);
+			usb_print_console("\t");
+			usb_print_console(cli_cmd[i].description);
+			usb_print_console("\r\n");
 		}
 		i++;
 	}
@@ -154,7 +154,7 @@ int cli_execute(int argc, const char * const *argv)
 	static bool init = false;
 	int i = 0;
 
-	usb_print("\r\n");
+	usb_print_console("\r\n");
 	if (argc == 0) {
 		if (!init) {
 			init = true;
@@ -192,7 +192,7 @@ void cli_insert_char(char ch)
 
 void cli_setup(void)
 {
-    microrl_init(&rl, usb_print);
+    microrl_init(&rl, usb_print_console);
     microrl_set_execute_callback(&rl, cli_execute);
 #ifdef _USE_COMPLETE
     microrl_set_complete_callback(&rl, cli_complete);
