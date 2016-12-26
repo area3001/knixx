@@ -22,12 +22,15 @@
  * SOFTWARE.
  */
 
+#include <libopencm3/cm3/nvic.h>
+#include <libopencm3/cm3/systick.h>
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/flash.h>
 #include <libopencm3/stm32/gpio.h>
 #include "usb.h"
 #include "cli.h"
 #include "button.h"
+#include "config.h"
 
 static void rcc_wait_for_osc_not_ready(enum rcc_osc osc)
 {
@@ -86,12 +89,24 @@ static void mco_setup(void)
 	rcc_set_mco(RCC_CFGR_MCO_HSE);
 }
 
+static void systick_setup(void)
+{
+	systick_set_frequency(CONFIG_SYSTICK_FREQ, rcc_ahb_frequency);
+	systick_counter_enable();
+	systick_interrupt_enable();
+}
+
+void sys_tick_handler(void)
+{
+}
+
 int main(void)
 {
 	clock_setup();
 	mco_setup();
 	usb_setup();
 	cli_setup();
+	systick_setup();
 
 	while (1) {
 		usb_poll();
