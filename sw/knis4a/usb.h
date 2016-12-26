@@ -6,7 +6,6 @@
 #define USB_BULK_MAX_PACKET_SIZE 	64
 
 void usb_setup(void);
-void usb_poll(void);
 void usb_print(const char *str);
 
 #endif

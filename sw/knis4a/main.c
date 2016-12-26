@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+#include <libopencmsis/core_cm3.h>
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/stm32/rcc.h>
@@ -102,14 +103,16 @@ void sys_tick_handler(void)
 
 int main(void)
 {
+	cm_disable_interrupts();
 	clock_setup();
 	mco_setup();
 	usb_setup();
 	cli_setup();
 	systick_setup();
+	cm_enable_interrupts();
 
 	while (1) {
-		usb_poll();
+		__WFI();
 	}
 
 	return 0;

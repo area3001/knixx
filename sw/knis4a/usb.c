@@ -24,6 +24,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/usb/usbd.h>
 #include <libopencm3/usb/cdc.h>
@@ -31,7 +32,7 @@
 #include "usb.h"
 #include "cli.h"
 
-usbd_device *dev;
+static usbd_device *dev;
 
 static const struct usb_device_descriptor descr = {
 	.bLength = USB_DT_DEVICE_SIZE,
@@ -542,9 +543,10 @@ void usb_setup(void)
 	dev = usbd_init(&st_usbfs_v2_usb_driver, &descr, &config, usb_strings, 7,
 		usbd_control_buffer, sizeof(usbd_control_buffer));
 	usbd_register_set_config_callback(dev, cdcacm_set_config);
+	nvic_enable_irq(NVIC_USB_IRQ);
 }
 
-void usb_poll(void)
+void usb_isr(void)
 {
 	usbd_poll(dev);
 }
