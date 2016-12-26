@@ -432,39 +432,68 @@ static const char *usb_strings[7] = {
 	"DfuSe-specific"
 };
 
+static void cdcacm_set_modem_state(usbd_device *usbd_dev, int iface, bool dsr,
+	bool dcd)
+{
+	char buf[10];
+	struct usb_cdc_notification *notif = (void*)buf;
+	/* We echo signals back to host as notification */
+	notif->bmRequestType = 0xA1;
+	notif->bNotification = USB_CDC_NOTIFY_SERIAL_STATE;
+	notif->wValue = 0;
+	notif->wIndex = iface;
+	notif->wLength = 2;
+	buf[8] = (dsr ? 2 : 0) | (dcd ? 1 : 0);
+	buf[9] = 0;
+	usbd_ep_write_packet(usbd_dev, EP_COMM(iface), buf, 10);
+}
+
+static void dfu_detach_complete(usbd_device *usbd_dev, struct usb_setup_data *req)
+{
+	(void)req;
+	(void)usbd_dev;
+
+	/* TODO jump into bootloader */
+}
+
 static int cdcacm_control_request(usbd_device *usbd_dev,
 	struct usb_setup_data *req, uint8_t **buf, uint16_t *len,
 	void (**complete)(usbd_device *usbd_dev, struct usb_setup_data *req))
 {
 	(void)complete;
 	(void)buf;
-	(void)usbd_dev;
+	(void)len;
 
 	switch (req->bRequest) {
-	case USB_CDC_REQ_SET_CONTROL_LINE_STATE: {
-		/*
-		 * This Linux cdc_acm driver requires this to be implemented
-		 * even though it's optional in the CDC spec, and we don't
-		 * advertise it in the ACM functional descriptor.
-		 */
-		char local_buf[10];
-		struct usb_cdc_notification *notif = (void *)local_buf;
-
-		/* We echo signals back to host as notification. */
-		notif->bmRequestType = 0xa1;
-		notif->bNotification = USB_CDC_NOTIFY_SERIAL_STATE;
-		notif->wValue = 0;
-		notif->wIndex = 0;
-		notif->wLength = 2;
-		local_buf[8] = req->wValue & 3;
-		local_buf[9] = 0;
-		// usbd_ep_write_packet(0x82, buf, 10);
+	case USB_CDC_REQ_SET_CONTROL_LINE_STATE:
+		cdcacm_set_modem_state(usbd_dev, req->wIndex, true, true);
 		return 1;
-		}
+		break;
 	case USB_CDC_REQ_SET_LINE_CODING:
 		if (*len < sizeof(struct usb_cdc_line_coding))
 			return 0;
 		return 1;
+		break;
+	case DFU_GETSTATUS:
+		if(req->wIndex == USB_ITF_DFU) {
+			(*buf)[0] = DFU_STATUS_OK;
+			(*buf)[1] = 0;
+			(*buf)[2] = 0;
+			(*buf)[3] = 0;
+			(*buf)[4] = STATE_APP_IDLE;
+			(*buf)[5] = 0;	/* iString not used here */
+			*len = 6;
+			return 1;
+		}
+		return 0;
+		break;
+	case DFU_DETACH:
+		if(req->wIndex == USB_ITF_DFU) {
+			*complete = dfu_detach_complete;
+			return 1;
+		}
+		return 0;
+		break;
 	}
 	return 0;
 }
@@ -482,29 +511,10 @@ static void console_cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep)
 	}
 }
 
-static void dfu_detach_complete(usbd_device *usbd_dev, struct usb_setup_data *req)
-{
-	(void)req;
-	(void)usbd_dev;
-}
-
-static int dfu_control_request(
-	usbd_device *usbd_dev, struct usb_setup_data *req, uint8_t **buf,
-	uint16_t *len, void (**complete)(usbd_device *, struct usb_setup_data *))
-{
-	(void)buf;
-	(void)len;
-	(void)usbd_dev;
-
-	if ((req->bmRequestType != 0x21) || (req->bRequest != DFU_DETACH))
-		return 0; /* Only accept class request. */
-	*complete = dfu_detach_complete;
-	return 1;
-}
-
 static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
 {
 	(void)wValue;
+	int i;
 
 	usbd_ep_setup(usbd_dev, EP_DATA_OUT(USB_ITF_CONSOLE), USB_ENDPOINT_ATTR_BULK,
 		USB_BULK_MAX_PACKET_SIZE, console_cdcacm_data_rx_cb);
@@ -513,13 +523,13 @@ static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
 	usbd_ep_setup(usbd_dev, EP_COMM(USB_ITF_CONSOLE), USB_ENDPOINT_ATTR_INTERRUPT,
 		USB_INT_MAX_PACKET_SIZE, NULL);
 	usbd_ep_setup(usbd_dev, EP_DATA_OUT(USB_ITF_DEBUG), USB_ENDPOINT_ATTR_BULK,
-		USB_BULK_MAX_PACKET_SIZE, console_cdcacm_data_rx_cb);
+		USB_BULK_MAX_PACKET_SIZE, NULL);
 	usbd_ep_setup(usbd_dev, EP_DATA_IN(USB_ITF_DEBUG), USB_ENDPOINT_ATTR_BULK,
 		USB_BULK_MAX_PACKET_SIZE, NULL);
 	usbd_ep_setup(usbd_dev, EP_COMM(USB_ITF_DEBUG), USB_ENDPOINT_ATTR_INTERRUPT,
 		USB_INT_MAX_PACKET_SIZE, NULL);
 	usbd_ep_setup(usbd_dev, EP_DATA_OUT(USB_ITF_TPUART), USB_ENDPOINT_ATTR_BULK,
-		USB_BULK_MAX_PACKET_SIZE, console_cdcacm_data_rx_cb);
+		USB_BULK_MAX_PACKET_SIZE, NULL);
 	usbd_ep_setup(usbd_dev, EP_DATA_IN(USB_ITF_TPUART), USB_ENDPOINT_ATTR_BULK,
 		USB_BULK_MAX_PACKET_SIZE, NULL);
 	usbd_ep_setup(usbd_dev, EP_COMM(USB_ITF_TPUART), USB_ENDPOINT_ATTR_INTERRUPT,
@@ -528,10 +538,9 @@ static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
 		USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
 		USB_REQ_TYPE_TYPE | USB_REQ_TYPE_RECIPIENT,
 		cdcacm_control_request);
-	usbd_register_control_callback(usbd_dev,
-		USB_REQ_TYPE_CLASS | USB_REQ_TYPE_INTERFACE,
-		USB_REQ_TYPE_TYPE | USB_REQ_TYPE_RECIPIENT,
-			dfu_control_request);
+	for (i = 0; i < 3; i++) {
+		cdcacm_set_modem_state(dev, i * 2, true, true);
+	}
 }
 
 /* Buffer to be used for control requests. */
