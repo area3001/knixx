@@ -81,7 +81,7 @@ static int cli_poke(int argc, const char * const *argv) {
 	return 0;
 }
 
-static int cli_pry(int argc, const char * const *argv);
+static int cli_a7ea(int argc, const char * const *argv);
 
 static struct cli_cmd_s cli_cmd[] = { {
 	.name = "hello",
@@ -96,11 +96,11 @@ static struct cli_cmd_s cli_cmd[] = { {
 	.hidden = false,
 	.exec = cli_help
 }, {
-	.name = "pry",
+	.name = "a7ea",
 	.arity = 0,
 	.description = "this hidden help",
 	.hidden = true,
-	.exec = cli_pry
+	.exec = cli_a7ea
 }, {
 	.name = "peek",
 	.arity = 2,
@@ -133,7 +133,7 @@ static int cli_help(int argc, const char * const *argv)
 	return 0;
 }
 
-static int cli_pry(int argc, const char * const *argv)
+static int cli_a7ea(int argc, const char * const *argv)
 {
 	int i = 0;
 
