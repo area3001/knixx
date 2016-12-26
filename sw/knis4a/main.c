@@ -108,6 +108,7 @@ int main(void)
 	mco_setup();
 	usb_setup();
 	cli_setup();
+	button_setup();
 	systick_setup();
 	cm_enable_interrupts();
 
