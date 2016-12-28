@@ -101,3 +101,15 @@ enum apci {
 unsigned short calc_CRC_CCITT(unsigned char* pBuf, unsigned short uLength);
 unsigned short get_CRC_CCITT(unsigned short u_crc_val, unsigned char btVal);
 
+char NCN_Reset ();
+char NCN_State ();
+void NCN_SetBusy ();
+void NCN_QuitBusy ();
+
+void NCN_BusMonitor ();
+char NCN_SetAddress (unsigned short address);
+void NCN_SetRepetition (unsigned char busy_counter, unsigned char nack_counter);
+
+
+
+
