@@ -61,3 +61,17 @@ enum mode {
 #define U_IntRegRd_ind_aa	0x03 //Internal Register Read address bit mask
 
 #define U_L_DataStart.req	0x80 
+#define U_L_DataCont.req	0x80 //Data Cont base
+#define U_L_DataCont_req_ii	0x3F //Data Control index bit mask
+#define U_L_DataOffset.req	0x08 //Data Offset base
+#define U_L_DataOffset_req_ii   0x07 //Data Offset index bit mask
+#define U_L_DataEnd.req		0x40 //Data End base
+#define U_L_DataEnd_req_ll	0x3F //Data End index bit mask
+
+#define U_FrameState.ind	0x13 //Frame State Base
+#define U_FrameState_ind_re	0x80
+#define U_FrameState_ind_ce	0x40
+#define U_FrameState_ind_te	0x20
+#define U_FrameState_ind_res	0x08
+
+#define L_Data.con		0x0B //Data base
