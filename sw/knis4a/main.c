@@ -31,6 +31,7 @@
 #include "usb.h"
 #include "cli.h"
 #include "button.h"
+#include "ncn.h"
 #include "config.h"
 
 static void rcc_wait_for_osc_not_ready(enum rcc_osc osc)
@@ -109,6 +110,7 @@ int main(void)
 	usb_setup();
 	cli_setup();
 	button_setup();
+	ncn_setup();
 	systick_setup();
 	cm_enable_interrupts();
 

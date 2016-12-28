@@ -28,6 +28,7 @@
 #include <string.h>
 #include "../microrl/src/microrl.h"
 #include "usb.h"
+#include "ncn.h"
 #include "cli.h"
 
 microrl_t rl;
@@ -81,6 +82,14 @@ static int cli_poke(int argc, const char * const *argv) {
 	return 0;
 }
 
+static int cli_ncn(int argc, const char * const *argv) {
+	char byte;
+
+	byte = strtoul(argv[1], NULL, 0);
+	ncn_tx(&byte, 1);
+	return 0;
+}
+
 static int cli_a7ea(int argc, const char * const *argv);
 
 static struct cli_cmd_s cli_cmd[] = { {
@@ -113,6 +122,12 @@ static struct cli_cmd_s cli_cmd[] = { {
 	.description = "<addr> <value> : set *addr to value",
 	.hidden = true,
 	.exec = cli_poke
+}, {
+	.name = "ncn",
+	.arity = 1,
+	.description = "<byte> : tx byte on ncn uart",
+	.hidden = true,
+	.exec = cli_ncn
 }, {
 	.name = NULL /* sentinel */
 } };
