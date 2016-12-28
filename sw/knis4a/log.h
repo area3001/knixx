@@ -13,7 +13,8 @@ enum log_lvl {
 };
 
 enum log_topic {
-	LOG_TOPIC_BUTTON
+	LOG_TOPIC_BUTTON,
+	LOG_TOPIC_NCN
 };
 
 void log_write(enum log_topic topic, enum log_lvl lvl, const char *fmt, ...);

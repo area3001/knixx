@@ -30,7 +30,8 @@
 
 static enum log_lvl log_mask = LOG_LVL_TRACE;
 static char *topic2str[] = {
-	"button"
+	"button",
+	"ncn"
 };
 
 void log_write(enum log_topic topic, enum log_lvl lvl, const char *fmt, ...)
