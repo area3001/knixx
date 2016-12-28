@@ -8,6 +8,24 @@ enum mode {
 	NORMAL
 };
 
+enum apci {
+	GroupValueRead,
+	GroupValueReponse,
+	GroupValueWrite,
+	IndividualAddrWrite,
+	IndividualAddrRequest,
+	IndividualAddrResponse,
+	AdcRead,
+	AdcResponse,
+	MemoryRead,
+	MemoryResponse,
+	MemoryWrite,
+	UserMessage,
+	MarkVersionRead,
+	MarkVersionResponse,
+	Restart,
+	Escape
+};
 
 #define U_Reset.req		0x01
 #define U_Reset.ind		0x03
@@ -69,9 +87,17 @@ enum mode {
 #define U_L_DataEnd_req_ll	0x3F //Data End index bit mask
 
 #define U_FrameState.ind	0x13 //Frame State Base
-#define U_FrameState_ind_re	0x80
-#define U_FrameState_ind_ce	0x40
-#define U_FrameState_ind_te	0x20
-#define U_FrameState_ind_res	0x08
+#define U_FrameState_ind_re	0x80 //Receive Error
+#define U_FrameState_ind_ce	0x40 //Checksum or Length Error
+#define U_FrameState_ind_te	0x20 //Timing Error
+#define U_FrameState_ind_res	0x08 //Reserved (Future Use, will be 0)
 
-#define L_Data.con		0x0B //Data base
+#define L_Data_con_pos		0x8B //Data Acknowledge positive
+#define L_Data_con_neg		0x0B //Data Acknowledge negative
+
+#define U_FrameEnd.ind		0xCB
+
+
+unsigned short calc_CRC_CCITT(unsigned char* pBuf, unsigned short uLength);
+unsigned short get_CRC_CCITT(unsigned short u_crc_val, unsigned char btVal);
+
