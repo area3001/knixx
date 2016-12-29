@@ -31,6 +31,7 @@
 #include "usb.h"
 #include "cli.h"
 #include "button.h"
+#include "ncn.h"
 #include "config.h"
 #include "pwm.h"
 
@@ -111,6 +112,7 @@ int main(void)
 	cli_setup();
 	pwm_init();
 	button_setup();
+	ncn_setup();
 	systick_setup();
 	cm_enable_interrupts();
 
