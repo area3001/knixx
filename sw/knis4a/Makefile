@@ -22,11 +22,10 @@
 ## SOFTWARE.
 ##
 
-OBJS = ../microrl/src/microrl.o cli.o usb.o button.o log.o
+OBJS = ../microrl/src/microrl.o cli.o usb.o button.o log.o pwm.o
 BINARY = main
 
 OPENCM3_DIR = ../libopencm3
 LDSCRIPT = ../knis4a.ld
 
 include ../libopencm3.target.mk
-

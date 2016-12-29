@@ -32,6 +32,7 @@
 #include "cli.h"
 #include "button.h"
 #include "config.h"
+#include "pwm.h"
 
 static void rcc_wait_for_osc_not_ready(enum rcc_osc osc)
 {
@@ -108,6 +109,7 @@ int main(void)
 	mco_setup();
 	usb_setup();
 	cli_setup();
+	pwm_init();
 	button_setup();
 	systick_setup();
 	cm_enable_interrupts();
