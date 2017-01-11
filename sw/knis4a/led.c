@@ -22,14 +22,23 @@
  * SOFTWARE.
  */
 
-#ifndef __PWM_H_
-#define __PWM_H_
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/gpio.h>
+#include "led.h"
 
+void led_setup(void)
+{
+	rcc_periph_clock_enable(RCC_GPIOA);
+	rcc_periph_clock_enable(RCC_GPIOB);
+  rcc_periph_clock_enable(RCC_GPIOC);
+	gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO2 | GPIO3 | GPIO5);
+	gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO0 | GPIO3);
+  gpio_mode_setup(GPIOC, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO13);
 
-void pwm_init(void);
-void led_color(float red, float green, float blue);
-// void pwm_init_output_channel(enum tim_oc_id oc_id);
-// void pwm_start_timer(void);
-// void pwm_set_pulse_width(enum tim_oc_id oc_id, uint32_t pulse_width);
-
-#endif
+  gpio_clear(GPIOC,GPIO13); // LED_A1
+  gpio_set(GPIOB,GPIO3);    // LED_A2
+  gpio_clear(GPIOA,GPIO3);  // LED_A3
+  gpio_clear(GPIOB,GPIO0);  // LED_A4
+  gpio_clear(GPIOA,GPIO2);  // LED_A5
+  gpio_clear(GPIOA,GPIO5);  // LED_A6
+}

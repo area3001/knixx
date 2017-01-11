@@ -34,6 +34,7 @@
 #include "ncn.h"
 #include "config.h"
 #include "pwm.h"
+#include "led.h"
 
 static void rcc_wait_for_osc_not_ready(enum rcc_osc osc)
 {
@@ -111,6 +112,7 @@ int main(void)
 	usb_setup();
 	cli_setup();
 	pwm_init();
+  led_setup();
 	button_setup();
 	ncn_setup();
 	systick_setup();
