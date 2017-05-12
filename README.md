@@ -18,6 +18,15 @@ Our first development board is a 4 or 6 button KNX compatible switch which fits 
 
 ![knixx_SW4_00_bot](https://raw.githubusercontent.com/area3001/knixx/master/HW/Switch4/knixx_SW4_00/3D_VIEW_BOT.png)
 
+### knixx Fez
+
+The knixx Fez features the same [NCN5121 KNX Transceiver](http://www.onsemi.com/PowerSolutions/product.do?id=NCN5121) as our switch but interfaces this with the Raspberry Pi. The board als has a [Ti BQ32000](http://www.ti.com/product/BQ32000) RTC, two EEPROMs and a general purpose LED and button.
+
+#### 3D render
+
+![knixx_Fez_00_top](https://raw.githubusercontent.com/area3001/knixx/master/HW/Fez/knixx_Fez_00/3D_VIEW_TOP.PNG)
+![knixx_Fez_00_bot](https://raw.githubusercontent.com/area3001/knixx/master/HW/Fez/knixx_Fez_00/3D_VIEW_BOT.PNG)
+
 ### knixx ???
 
-What's next? A system 55 version? Actuators?
+What's next? A system 55 version? Actuators? BeagleBoard Cape?
