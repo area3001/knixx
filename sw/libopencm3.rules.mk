@@ -85,6 +85,9 @@ CFLAGS		+= -Wextra -Wshadow -Wimplicit-function-declaration
 CFLAGS		+= -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes
 CFLAGS		+= -fno-common -ffunction-sections -fdata-sections
 CFLAGS		+= -DKNIXX_COMMIT=\"$(shell git rev-parse HEAD | awk '{print substr($$0,1,16)}')\"
+ifeq ($(NUCLEO),1)
+CFLAGS		+= -DNUCLEO
+endif
 
 ###############################################################################
 # C++ flags

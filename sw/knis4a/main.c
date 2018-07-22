@@ -71,8 +71,12 @@ static void clock_setup(void)
 	rcc_osc_off(RCC_PLL);
 	rcc_wait_for_osc_not_ready(RCC_PLL);
 	flash_set_ws(FLASH_ACR_LATENCY_024_048MHZ);
+#ifdef NUCLEO
+	rcc_set_pll_multiplication_factor(RCC_CFGR_PLLMUL_MUL6);
+#else
 	/* 16MHz * 3 = 48MHz */
 	rcc_set_pll_multiplication_factor(RCC_CFGR_PLLMUL_MUL3);
+#endif
 	rcc_set_pll_source(RCC_HSE);
 	rcc_osc_on(RCC_PLL);
 	rcc_wait_for_osc_ready(RCC_PLL);
@@ -112,7 +116,7 @@ int main(void)
 	usb_setup();
 	cli_setup();
 	pwm_init();
-  led_setup();
+	led_setup();
 	button_setup();
 	ncn_setup();
 	systick_setup();
