@@ -36,7 +36,7 @@ microrl_t rl;
 static int cli_banner(void)
 {
 	usb_print_console(
-		" __          .__\r\n" 
+		" __          .__\r\n"
 		"|  | __ ____ |__|__  ______  ___\r\n"
 		"|  |/ //    \\|  \\  \\/  /\\  \\/  /\r\n"
 		"|    <|   |  \\  |>    <  >    < \r\n"
@@ -48,6 +48,9 @@ static int cli_banner(void)
 
 static int cli_hello(int argc, const char * const *argv)
 {
+	(void)argc;
+	(void)argv;
+
 	usb_print_console("world!\r\n");
 	return 0;
 }
@@ -55,6 +58,7 @@ static int cli_hello(int argc, const char * const *argv)
 static int cli_help(int argc, const char * const *argv);
 
 static int cli_peek(int argc, const char * const *argv) {
+	(void)argc;
 	unsigned int i, j, addr, lines;
 	char hex[9];
 
@@ -74,6 +78,7 @@ static int cli_peek(int argc, const char * const *argv) {
 }
 
 static int cli_poke(int argc, const char * const *argv) {
+	(void)argc;
 	unsigned int addr, value;
 
 	addr = strtoul(argv[1], NULL, 0);
@@ -83,6 +88,7 @@ static int cli_poke(int argc, const char * const *argv) {
 }
 
 static int cli_ncn(int argc, const char * const *argv) {
+	(void)argc;
 	char byte;
 
 	byte = strtoul(argv[1], NULL, 0);
@@ -134,6 +140,8 @@ static struct cli_cmd_s cli_cmd[] = { {
 
 static int cli_help(int argc, const char * const *argv)
 {
+	(void)argc;
+	(void)argv;
 	int i = 0;
 
 	while (cli_cmd[i].name != NULL) {
@@ -150,6 +158,8 @@ static int cli_help(int argc, const char * const *argv)
 
 static int cli_a7ea(int argc, const char * const *argv)
 {
+	(void)argc;
+	(void)argv;
 	int i = 0;
 
 	while (cli_cmd[i].name != NULL) {
@@ -207,10 +217,10 @@ void cli_insert_char(char ch)
 
 void cli_setup(void)
 {
-    microrl_init(&rl, usb_print_console);
-    microrl_set_execute_callback(&rl, cli_execute);
+	microrl_init(&rl, usb_print_console);
+	microrl_set_execute_callback(&rl, cli_execute);
 #ifdef _USE_COMPLETE
-    microrl_set_complete_callback(&rl, cli_complete);
+	microrl_set_complete_callback(&rl, cli_complete);
 #endif
-    microrl_set_sigint_callback(&rl, cli_sigint);
+	microrl_set_sigint_callback(&rl, cli_sigint);
 }
