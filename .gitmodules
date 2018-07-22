@@ -4,3 +4,6 @@
 [submodule "sw/microrl"]
 	path = sw/microrl
 	url = git@github.com:area3001/microrl.git
+[submodule "sw/mini-printf"]
+	path = sw/mini-printf
+	url = https://github.com/mludvig/mini-printf.git

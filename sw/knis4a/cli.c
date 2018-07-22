@@ -24,9 +24,9 @@
 
 #include <stddef.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include "../microrl/src/microrl.h"
+#include "../mini-printf/mini-printf.h"
 #include "usb.h"
 #include "ncn.h"
 #include "cli.h"
@@ -66,10 +66,11 @@ static int cli_peek(int argc, const char * const *argv) {
 	lines = strtoul(argv[2], NULL, 0);
 	for (i = 0; i < lines; i++) {
 		usb_print_console("0x");
-		sprintf(hex, "%08x ", addr + i * 16);
+		snprintf(hex, CLI_HEX_LENGTH, "%08x ", addr + i * 16);
 		usb_print_console(hex);
 		for (j = 0; j < 4; j++) {
-			sprintf(hex, " %08x", CLI_MMIO32(addr + ((i * 4) + j) * 4));
+			snprintf(hex, CLI_HEX_LENGTH, " %08x",
+					CLI_MMIO32(addr + ((i * 4) + j) * 4));
 			usb_print_console(hex);
 		}
 		usb_print_console("\r\n");

@@ -13,3 +13,5 @@
 *.c.mod
 nbproject
 libopencm3
+microrl
+mini-printf

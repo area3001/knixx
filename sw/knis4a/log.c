@@ -23,8 +23,8 @@
  */
 
 #include <string.h>
-#include <stdio.h>
 #include <stdarg.h>
+#include "../mini-printf/mini-printf.h"
 #include "usb.h"
 #include "log.h"
 
