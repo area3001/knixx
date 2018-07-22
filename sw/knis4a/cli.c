@@ -60,7 +60,7 @@ static int cli_help(int argc, const char * const *argv);
 static int cli_peek(int argc, const char * const *argv) {
 	(void)argc;
 	unsigned int i, j, addr, lines;
-	char hex[9];
+	char hex[CLI_HEX_LENGTH];
 
 	addr = strtoul(argv[1], NULL, 0);
 	lines = strtoul(argv[2], NULL, 0);

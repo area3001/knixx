@@ -3,7 +3,8 @@
 
 #include <stdbool.h>
 
-#define CLI_MMIO32(addr)	(*(volatile unsigned int *)(addr))
+#define CLI_HEX_LENGTH 10
+#define CLI_MMIO32(addr) (*(volatile unsigned int *)(addr))
 
 typedef int (*cli_fun)(int argc, const char * const *argv);
 
