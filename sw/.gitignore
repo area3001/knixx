@@ -10,5 +10,6 @@
 *.stylecheck
 *.swp
 *.gdb_history
+*.c.mod
 nbproject
 libopencm3
