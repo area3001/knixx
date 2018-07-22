@@ -6,8 +6,6 @@ enum button {
 	BUTTON_2, /* A15 */
 	BUTTON_3, /* A4 */
 	BUTTON_4, /* A7 */
-	BUTTON_5, /* A1 */
-	BUTTON_6, /* A6 */
 	MAX_BUTTONS
 };
 

@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+#include <stdio.h>
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
@@ -32,23 +33,19 @@
 
 void button_setup(void)
 {
-	nvic_enable_irq(NVIC_EXTI0_1_IRQ);
 	nvic_enable_irq(NVIC_EXTI4_15_IRQ);
 	rcc_periph_clock_enable(RCC_GPIOA);
 	rcc_periph_clock_enable(RCC_GPIOB);
 	gpio_mode_setup(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_PULLUP,
-	                GPIO1 | GPIO4 | GPIO6 | GPIO7 | GPIO15);
+	                GPIO4 | GPIO7 | GPIO15);
 	gpio_mode_setup(GPIOB, GPIO_MODE_INPUT, GPIO_PUPD_PULLUP, GPIO9);
-	exti_select_source(EXTI1, GPIOA);
 	exti_select_source(EXTI4, GPIOA);
-	exti_select_source(EXTI6, GPIOA);
 	exti_select_source(EXTI7, GPIOA);
 	exti_select_source(EXTI9, GPIOB);
 	exti_select_source(EXTI15, GPIOA);
-	exti_set_trigger(EXTI1 | EXTI4 | EXTI6 | EXTI7 | EXTI9 | EXTI15,
-	                 EXTI_TRIGGER_BOTH);
-	exti_reset_request(EXTI1 | EXTI4 | EXTI6 | EXTI7 | EXTI9 | EXTI15);
-	exti_enable_request(EXTI1 | EXTI4 | EXTI6 | EXTI7 | EXTI9 | EXTI15);
+	exti_set_trigger(EXTI4 | EXTI7 | EXTI9 | EXTI15, EXTI_TRIGGER_BOTH);
+	exti_reset_request(EXTI4 | EXTI7 | EXTI9 | EXTI15);
+	exti_enable_request(EXTI4 | EXTI7 | EXTI9 | EXTI15);
 }
 
 static void button_handler(enum button btn, bool low)
@@ -60,23 +57,11 @@ static void button_handler(enum button btn, bool low)
 	}
 }
 
-void exti0_1_isr(void)
-{
-	if (exti_get_flag_status(EXTI1)) {
-		exti_reset_request(EXTI1);
-		button_handler(BUTTON_5, gpio_get(GPIOA, GPIO1) == 0);
-	}
-}
-
 void exti4_15_isr(void)
 {
 	if (exti_get_flag_status(EXTI4)) {
 		exti_reset_request(EXTI4);
 		button_handler(BUTTON_3, gpio_get(GPIOA, GPIO4) == 0);
-	}
-	if (exti_get_flag_status(EXTI6)) {
-		exti_reset_request(EXTI6);
-		button_handler(BUTTON_6, gpio_get(GPIOA, GPIO6) == 0);
 	}
 	if (exti_get_flag_status(EXTI7)) {
 		exti_reset_request(EXTI7);
