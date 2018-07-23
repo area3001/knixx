@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Bart Van Der Meerssche <bart@flukso.net>
+ * Copyright (c) 2018 Bart Van Der Meerssche <bart@flukso.net>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-/* Linker script for Knixx KNIS4A (STM32F070C6T6, 32K flash, 6K RAM). */
+/* Linker script for Knixx KNIS4A (STM32F072C8T6, 64K flash, 16K RAM). */
 
 /* Define memory regions. */
 MEMORY
 {
-	rom (rx) : ORIGIN = 0x08000000, LENGTH = 32K
-	ram (rwx) : ORIGIN = 0x20000000, LENGTH = 6K
+	rom (rx) : ORIGIN = 0x08000000, LENGTH = 64K
+	ram (rwx) : ORIGIN = 0x20000000, LENGTH = 16K
 }
 
 /* Include the common ld script. */
