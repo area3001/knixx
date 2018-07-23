@@ -33,6 +33,7 @@
 #include "cli.h"
 
 static usbd_device *dev;
+static bool usb_connected = false;
 
 static const struct usb_device_descriptor descr = {
 	.bLength = USB_DT_DEVICE_SIZE,
@@ -113,7 +114,7 @@ static const struct {
 		.bDescriptorSubtype = USB_CDC_TYPE_UNION,
 		.bControlInterface = 0,
 		.bSubordinateInterface0 = 1,
-	 },
+	},
 };
 
 static const struct usb_interface_descriptor console_comm_iface[] = {{
@@ -214,7 +215,7 @@ static const struct {
 		.bDescriptorSubtype = USB_CDC_TYPE_UNION,
 		.bControlInterface = 2,
 		.bSubordinateInterface0 = 3,
-	 },
+	},
 };
 
 static const struct usb_interface_descriptor log_comm_iface[] = {{
@@ -315,7 +316,7 @@ static const struct {
 		.bDescriptorSubtype = USB_CDC_TYPE_UNION,
 		.bControlInterface = 4,
 		.bSubordinateInterface0 = 5,
-	 },
+	},
 };
 
 static const struct usb_interface_descriptor tpuart_comm_iface[] = {{
@@ -481,7 +482,7 @@ static int cdcacm_control_request(usbd_device *usbd_dev,
 			(*buf)[2] = 0;
 			(*buf)[3] = 0;
 			(*buf)[4] = STATE_APP_IDLE;
-			(*buf)[5] = 0;	/* iString not used here */
+			(*buf)[5] = 0; /* iString not used here */
 			*len = 6;
 			return 1;
 		}
@@ -509,6 +510,11 @@ static void console_cdcacm_data_rx_cb(usbd_device *usbd_dev, uint8_t ep)
 			cli_insert_char(buf[i]);
 		}
 	}
+}
+
+static void cdcacm_suspend_cb(void)
+{
+	usb_connected = false;
 }
 
 static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
@@ -541,6 +547,8 @@ static void cdcacm_set_config(usbd_device *usbd_dev, uint16_t wValue)
 	for (i = 0; i < 3; i++) {
 		cdcacm_set_modem_state(dev, i * 2, true, true);
 	}
+	usb_connected = true;
+	usbd_register_suspend_callback(usbd_dev, cdcacm_suspend_cb);
 }
 
 /* Buffer to be used for control requests. */
@@ -564,6 +572,9 @@ static void usb_print(enum usb_itf itf, const char *str)
 {
 	size_t i, len;
 
+	if (!usb_connected) {
+		return;
+	}
 	len = strlen(str);
 	for (i = 0; i < len / USB_BULK_MAX_PACKET_SIZE; i++) {
 		while (!usbd_ep_write_packet(dev, EP_DATA_IN(itf),
