@@ -23,7 +23,7 @@
 ##
 
 OBJS = ../microrl/src/microrl.o ../mini-printf/mini-printf.o \
-	cli.o usb.o button.o log.o ncn.o pwm.o led.o
+	clock.o cli.o usb.o button.o log.o ncn.o pwm.o led.o
 BINARY = main
 
 OPENCM3_DIR = ../libopencm3

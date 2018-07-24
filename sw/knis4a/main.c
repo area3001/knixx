@@ -28,6 +28,7 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/flash.h>
 #include <libopencm3/stm32/gpio.h>
+#include "clock.h"
 #include "usb.h"
 #include "cli.h"
 #include "button.h"
@@ -60,7 +61,7 @@ static void rcc_set_pll_source(enum rcc_osc osc)
 	}
 }
 
-static void clock_setup(void)
+static void clk_tree_setup(void)
 {
 	/* cf. rcc_clock_setup_in_hsi_out_48mhz */
 	rcc_osc_on(RCC_HSI);
@@ -97,29 +98,18 @@ static void mco_setup(void)
 	rcc_set_mco(RCC_CFGR_MCO_HSE);
 }
 
-static void systick_setup(void)
-{
-	systick_set_frequency(CONFIG_SYSTICK_FREQ, rcc_ahb_frequency);
-	systick_counter_enable();
-	systick_interrupt_enable();
-}
-
-void sys_tick_handler(void)
-{
-}
-
 int main(void)
 {
 	cm_disable_interrupts();
-	clock_setup();
+	clk_tree_setup();
 	mco_setup();
+	clock_setup();
 	usb_setup();
 	cli_setup();
 	pwm_init();
 	led_setup();
 	button_setup();
 	ncn_setup();
-	systick_setup();
 	cm_enable_interrupts();
 
 	while (1) {

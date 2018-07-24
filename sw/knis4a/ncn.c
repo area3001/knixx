@@ -56,16 +56,16 @@ void ncn_setup(void)
 void usart1_isr(void)
 {
 	if (((USART_CR1(USART1) & USART_CR1_RXNEIE) != 0) &&
-	    ((USART_ISR(USART1) & USART_ISR_RXNE) != 0)) {
+			((USART_ISR(USART1) & USART_ISR_RXNE) != 0)) {
 
-		log_write(LOG_TOPIC_NCN, LOG_LVL_TRACE, "rx: %x", usart_recv(USART1));
+		log_write(LOG_TOPIC_NCN, LOG_LVL_TRACE, "rx 0x%x", usart_recv(USART1));
 	}
 	if (((USART_CR1(USART1) & USART_CR1_TXEIE) != 0) &&
-	    ((USART_ISR(USART1) & USART_ISR_TXE) != 0)) {
+			((USART_ISR(USART1) & USART_ISR_TXE) != 0)) {
 
 		if (tx_buffer.idx < tx_buffer.fill) {
-			log_write(LOG_TOPIC_NCN, LOG_LVL_TRACE, "tx: %x",
-			    tx_buffer.data[tx_buffer.idx]);
+			log_write(LOG_TOPIC_NCN, LOG_LVL_TRACE, "tx 0x%x",
+					tx_buffer.data[tx_buffer.idx]);
 			usart_send(USART1, tx_buffer.data[tx_buffer.idx++]);
 		} else {
 			usart_disable_tx_interrupt(USART1);

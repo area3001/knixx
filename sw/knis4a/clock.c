@@ -22,42 +22,37 @@
  * SOFTWARE.
  */
 
-#include <string.h>
-#include <stdarg.h>
+#include <libopencm3/cm3/cortex.h>
+#include <libopencm3/cm3/nvic.h>
+#include <libopencm3/cm3/systick.h>
+#include <libopencm3/stm32/rcc.h>
 #include "../mini-printf/mini-printf.h"
-#include "usb.h"
-#include "clock.h"
 #include "log.h"
+#include "clock.h"
 
-static enum log_lvl log_mask = LOG_LVL_TRACE;
-static char *topic2str[] = {
-	"button",
-	"ncn"
-};
+struct clock clk = {0, 0};
 
-void log_set_mask(enum log_lvl mask)
+void clock_setup(void)
 {
-	log_mask = mask;
+	systick_set_frequency(CLOCK_SYSTICK_FREQ, rcc_ahb_frequency);
+	systick_counter_enable();
+	systick_interrupt_enable();
 }
 
-void log_write(enum log_topic topic, enum log_lvl lvl, const char *fmt, ...)
+void clock_timestamp(char *str)
 {
-	char str[LOG_STR_MAX] = "[";
-	size_t topic_len, str_len;
-	va_list ap;
+	snprintf(str, CLOCK_STR_LEN + 1, "[%05u.%03u] ", clk.secs, clk.msecs);
+}
 
-	if (lvl < log_mask) {
-		return;
+void sys_tick_handler(void)
+{
+	if (clk.msecs < 999) {
+		clk.msecs++;
+	} else {
+		cm_disable_interrupts();
+		clk.msecs = 0;
+		clk.secs++;
+		cm_enable_interrupts();
 	}
-	clock_timestamp(str);
-	topic_len = strlen(topic2str[topic]);
-	strcpy(str + CLOCK_STR_LEN, topic2str[topic]);
-	strcpy(str +  CLOCK_STR_LEN + topic_len, ": ");
-	va_start(ap, fmt);
-	vsnprintf(str + CLOCK_STR_LEN + 2 + topic_len, LOG_STR_MAX - CLOCK_STR_LEN
-			- 2 - topic_len, fmt, ap);
-	va_end(ap);
-	str_len = strlen(str);
-	snprintf(str + str_len, LOG_STR_MAX - str_len, "\r\n");
-	usb_print_log(str);
 }
+

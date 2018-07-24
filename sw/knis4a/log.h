@@ -1,7 +1,7 @@
 #ifndef LOG_H_
 #define LOG_H_
 
-#define LOG_STR_MAX	80
+#define LOG_STR_MAX 64
 
 enum log_lvl {
 	LOG_LVL_TRACE,
@@ -17,6 +17,7 @@ enum log_topic {
 	LOG_TOPIC_NCN
 };
 
+void log_set_mask(enum log_lvl mask);
 void log_write(enum log_topic topic, enum log_lvl lvl, const char *fmt, ...);
 
 #endif
