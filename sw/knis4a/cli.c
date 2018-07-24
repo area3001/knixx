@@ -27,6 +27,7 @@
 #include <string.h>
 #include "../microrl/src/microrl.h"
 #include "../mini-printf/mini-printf.h"
+#include "log.h"
 #include "usb.h"
 #include "ncn.h"
 #include "cli.h"
@@ -88,6 +89,18 @@ static int cli_poke(int argc, const char * const *argv) {
 	return 0;
 }
 
+static int cli_log(int argc, const char * const *argv) {
+	(void)argc;
+	enum log_lvl mask;
+
+	mask = strtoul(argv[1], NULL, 0);
+	if (mask > LOG_LVL_OFF) {
+		mask = LOG_LVL_OFF;
+	}
+	log_set_mask(mask);
+	return 0;
+}
+
 static int cli_ncn(int argc, const char * const *argv) {
 	(void)argc;
 	char byte;
@@ -100,17 +113,17 @@ static int cli_ncn(int argc, const char * const *argv) {
 static int cli_a7ea(int argc, const char * const *argv);
 
 static struct cli_cmd_s cli_cmd[] = { {
-	.name = "hello",
-	.arity = 0,
-	.description = "world!",
-	.hidden = true,
-	.exec = cli_hello
-}, {
 	.name = "help",
 	.arity = 0,
 	.description = "this help",
 	.hidden = false,
 	.exec = cli_help
+}, {
+	.name = "log",
+	.arity = 1,
+	.description = "<level> : set log level",
+	.hidden = false,
+	.exec = cli_log
 }, {
 	.name = "a7ea",
 	.arity = 0,
@@ -129,6 +142,12 @@ static struct cli_cmd_s cli_cmd[] = { {
 	.description = "<addr> <value> : set *addr to value",
 	.hidden = true,
 	.exec = cli_poke
+}, {
+	.name = "hello",
+	.arity = 0,
+	.description = "world!",
+	.hidden = true,
+	.exec = cli_hello
 }, {
 	.name = "ncn",
 	.arity = 1,
@@ -191,7 +210,7 @@ int cli_execute(int argc, const char * const *argv)
 	}
 	while (cli_cmd[i].name != NULL) {
 		if (strcmp(cli_cmd[i].name, argv[0]) == 0 &&
-		    cli_cmd[i].arity == argc - 1) {
+				cli_cmd[i].arity == argc - 1) {
 			return cli_cmd[i].exec(argc, argv);
 		}
 		i++;
